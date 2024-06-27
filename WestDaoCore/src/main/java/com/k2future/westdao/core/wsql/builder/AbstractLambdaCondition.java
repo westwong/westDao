@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 import static com.k2future.westdao.core.wsql.condition.Constants.*;
 
 /**
- * @Author west
- * @Date 25/06/2024
+ * @author west
+ * @since 25/06/2024
  */
 public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambdaCondition<Entity, Self>> extends AbstactCondition<Entity, Self, WFunction<Entity, ?>> {
 
@@ -24,8 +24,8 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
     /**
      * clazz
      *
-     * @param entity
-     * @param clazz
+     * @param entity 实体
+     * @param clazz 类
      */
     public AbstractLambdaCondition(Entity entity, Class<Entity> clazz) {
         super(entity, clazz);

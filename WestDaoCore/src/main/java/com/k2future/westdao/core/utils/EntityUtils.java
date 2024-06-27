@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author west
- * @Date 2024/6/23
+ * @author west
+ * @since 2024/6/23
  */
 public class EntityUtils {
     /**
@@ -42,6 +42,7 @@ public class EntityUtils {
      * getClazz
      *
      * @param entity entity
+     * @param <T>    entity
      * @return clazz
      */
     public static <T> Class<T> getClazz(T entity) {
@@ -53,6 +54,8 @@ public class EntityUtils {
     /**
      * Parse the entity to get a map of property names and their corresponding values
      *
+     * @param entity The entity to parse
+     * @param <T>    The type of the entity
      * @return A map containing property names as keys and their values as values
      */
     public static <T> Map<String, Object> parseEntity(T entity) {

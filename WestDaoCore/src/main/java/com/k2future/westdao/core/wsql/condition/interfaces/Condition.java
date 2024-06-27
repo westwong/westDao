@@ -12,8 +12,8 @@ import java.util.Collection;
  *
  * @param <Self> 返回类型自身，用于链式调用
  * @param <R>    字段或列的类型
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface Condition<Self, R> extends Serializable {
 
@@ -28,7 +28,9 @@ public interface Condition<Self, R> extends Serializable {
     Self eq(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#eq(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self eq(R column, Object val) {
         return eq(true, column, val);
@@ -45,7 +47,9 @@ public interface Condition<Self, R> extends Serializable {
     Self ne(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#ne(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self ne(R column, Object val) {
         return ne(true, column, val);
@@ -62,7 +66,9 @@ public interface Condition<Self, R> extends Serializable {
     Self gt(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#gt(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self gt(R column, Object val) {
         return gt(true, column, val);
@@ -79,7 +85,9 @@ public interface Condition<Self, R> extends Serializable {
     Self ge(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#ge(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self ge(R column, Object val) {
         return ge(true, column, val);
@@ -96,7 +104,9 @@ public interface Condition<Self, R> extends Serializable {
     Self lt(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#lt(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self lt(R column, Object val) {
         return lt(true, column, val);
@@ -113,7 +123,9 @@ public interface Condition<Self, R> extends Serializable {
     Self le(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#le(boolean, R, Object)}
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self le(R column, Object val) {
         return le(true, column, val);
@@ -131,7 +143,10 @@ public interface Condition<Self, R> extends Serializable {
     Self between(boolean append, R column, Object val1, Object val2);
 
     /**
-     * {@link Condition#between(boolean, R, Object, Object)}
+     * @param column 字段
+     * @param val1    值1
+     * @param val2    值2
+     * @return 返回类型自身，用于链式调用
      */
     default Self between(R column, Object val1, Object val2) {
         return between(true, column, val1, val2);
@@ -149,7 +164,10 @@ public interface Condition<Self, R> extends Serializable {
     Self notBetween(boolean append, R column, Object val1, Object val2);
 
     /**
-     * {@link Condition#notBetween(boolean, R, Object, Object)}
+     * @param column 字段
+     * @param val1    值1
+     * @param val2    值2
+     * @return 返回类型自身，用于链式调用
      */
     default Self notBetween(R column, Object val1, Object val2) {
         return notBetween(true, column, val1, val2);
@@ -165,9 +183,13 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self like(boolean append, R column, Object val);
-
     /**
-     * {@link Condition#like(boolean, R, Object)}
+     * 添加 LIKE 条件
+     * like %name%
+     *
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self like(R column, Object val) {
         return like(true, column, val);
@@ -185,7 +207,12 @@ public interface Condition<Self, R> extends Serializable {
     Self notLike(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#notLike(boolean, R, Object)}
+     * 添加 NOT LIKE 条件
+     * not like "%name%"
+     *
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self notLike(R column, Object val) {
         return notLike(true, column, val);
@@ -201,9 +228,13 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self likeLeft(boolean append, R column, Object val);
-
     /**
-     * {@link Condition#likeLeft(boolean, R, Object)}
+     * 添加左 LIKE 条件
+     * like %name
+     *
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self likeLeft(R column, Object val) {
         return likeLeft(true, column, val);
@@ -221,7 +252,12 @@ public interface Condition<Self, R> extends Serializable {
     Self likeRight(boolean append, R column, Object val);
 
     /**
-     * {@link Condition#likeRight(boolean, R, Object)}
+     * 添加右 LIKE 条件
+     * like name%
+     *
+     * @param column 字段
+     * @param val    值
+     * @return 返回类型自身，用于链式调用
      */
     default Self likeRight(R column, Object val) {
         return likeRight(true, column, val);
@@ -238,7 +274,11 @@ public interface Condition<Self, R> extends Serializable {
     Self in(boolean append, R column, Collection<?> values);
 
     /**
-     * {@link Condition#in(boolean, R, Collection)}
+     * 添加 IN 条件
+     *
+     * @param column 字段
+     * @param values 值集合
+     * @return 返回类型自身，用于链式调用
      */
     default Self in(R column, Collection<?> values) {
         return in(true, column, values);
@@ -255,7 +295,11 @@ public interface Condition<Self, R> extends Serializable {
     Self notIn(boolean append, R column, Collection<?> values);
 
     /**
-     * {@link Condition#notIn(boolean, R, Collection)}
+     * 添加 notIn 条件
+     *
+     * @param column 字段
+     * @param values 值集合
+     * @return 返回类型自身，用于链式调用
      */
     default Self notIn(R column, Collection<?> values) {
         return notIn(true, column, values);
@@ -270,9 +314,12 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self inJPQL(boolean append, R colum, String jpql);
-
     /**
-     * {@link Condition#inJPQL(boolean, R, String)}
+     * 添加 IN 条件 jpql
+     *
+     * @param colum  字段
+     * @param jpql   jpql语句
+     * @return 返回类型自身，用于链式调用
      */
     default Self inJPQL(R colum, String jpql) {
         return inJPQL(true, colum, jpql);
@@ -288,7 +335,10 @@ public interface Condition<Self, R> extends Serializable {
     Self isNull(boolean append, R column);
 
     /**
-     * {@link Condition#isNull(boolean, R)}
+     * 添加 IS NULL 条件
+     *
+     * @param column 字段
+     * @return 返回类型自身，用于链式调用
      */
     default Self isNull(R column) {
         return isNull(true, column);
@@ -302,9 +352,11 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self isNotNull(boolean append, R column);
-
     /**
-     * {@link Condition#isNotNull(boolean, R)}
+     * 添加 IS NOT NULL 条件
+     *
+     * @param column 字段
+     * @return 返回类型自身，用于链式调用
      */
     default Self isNotNull(R column) {
         return isNotNull(true, column);

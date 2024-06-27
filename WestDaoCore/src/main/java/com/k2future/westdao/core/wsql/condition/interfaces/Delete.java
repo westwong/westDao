@@ -9,8 +9,8 @@ import java.io.Serializable;
  * </p>
  *
  * @param <Self> 返回类型自身，用于链式调用
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface Delete<Self> extends Serializable {
 

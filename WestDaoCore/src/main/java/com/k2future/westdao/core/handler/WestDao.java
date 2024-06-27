@@ -7,14 +7,13 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 /**
- * @Author west
- * @Date 2024/6/23
+ * @author west
+ * @since 2024/6/23
  */
 public interface WestDao<T> {
 
     /**
      * save
-     *
      * @return entity
      */
     T save();
@@ -36,7 +35,7 @@ public interface WestDao<T> {
     /**
      * delete by entity field and builder field
      *
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param builder JpqlBuilder jpql构造器
      * @return 删除的数量
      */
     int deleteAll(JpqlBuilder<T> builder);
@@ -59,7 +58,7 @@ public interface WestDao<T> {
      * set 的属性 在entity里面的属性 ，条件语句在builder里面
      * set the properties in the entity and the condition statement in the builder
      *
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param builder JpqlBuilder jpql构造器
      * @return entity
      */
     int update(JpqlBuilder<T> builder);
@@ -67,7 +66,7 @@ public interface WestDao<T> {
     /**
      * findAll
      *
-     * @return List<T>
+     * @return List
      */
     List<T> findAll();
 
@@ -75,8 +74,8 @@ public interface WestDao<T> {
      * 查找条件由 entity 的属性 与 builder 的属性组合
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return List<T>
+     * @param builder JpqlBuilder jpql构造器
+     * @return List
      */
     List<T> findAll(JpqlBuilder<T> builder);
 
@@ -84,7 +83,7 @@ public interface WestDao<T> {
      * 查找条件由 entity 的属性 与 builder 的属性组合
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param builder JpqlBuilder jpql构造器
      * @return entity maybe null
      */
     T findOne(JpqlBuilder<T> builder);
@@ -102,7 +101,7 @@ public interface WestDao<T> {
      * search conditions are combined by the properties of the entity
      *
      * @param page pageParam
-     * @return Page<T>
+     * @return Page
      */
     Page<T> page(Pageable page);
 
@@ -111,8 +110,8 @@ public interface WestDao<T> {
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
      * @param page    pageParam
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return Page<T>
+     * @param builder JpqlBuilder jpql构造器
+     * @return Page
      */
     Page<T> page(Pageable page, JpqlBuilder<T> builder);
 
@@ -128,8 +127,8 @@ public interface WestDao<T> {
      * 查找条件由 entity 的属性 与 builder 的属性组合
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return Page<T>
+     * @param builder JpqlBuilder jpql构造器
+     * @return Page
      */
     long count(JpqlBuilder<T> builder);
 

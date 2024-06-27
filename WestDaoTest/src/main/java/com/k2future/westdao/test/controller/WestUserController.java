@@ -21,8 +21,8 @@ import java.util.List;
 /**
  * West UserController
  *
- * @Author west
- * @Date 2024/6/22
+ * @author west
+ * @since 2024/6/22
  */
 @RestController
 @RequestMapping("/west")

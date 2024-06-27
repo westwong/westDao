@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 @Data
 @Accessors(chain = true)

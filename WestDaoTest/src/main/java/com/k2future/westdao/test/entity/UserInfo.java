@@ -7,8 +7,8 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 
 /**
- * @Author west
- * @Date 2024/6/12
+ * @author west
+ * @since 2024/6/12
  */
 @Entity
 @Data

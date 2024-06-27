@@ -262,7 +262,7 @@ public class WestDaoProcessor extends AbstractProcessor {
     /**
      * override parent setter
      */
-    public void overrideParentSetter(TypeElement typeElement, ClassName childClassName, TypeSpec.Builder builder) {
+    private void overrideParentSetter(TypeElement typeElement, ClassName childClassName, TypeSpec.Builder builder) {
         for (Element enclosedElement : typeElement.getEnclosedElements()) {
             if (enclosedElement instanceof VariableElement) {
                 VariableElement field = (VariableElement) enclosedElement;

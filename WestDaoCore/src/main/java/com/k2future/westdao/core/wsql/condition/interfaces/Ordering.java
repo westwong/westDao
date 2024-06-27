@@ -12,13 +12,16 @@ import java.io.Serializable;
  *
  * @param <Self> 返回类型自身，用于链式调用
  * @param <R>    排序字段或列的类型
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface Ordering<Self, R> extends Serializable {
 
     /**
-     * {@link Ordering#orderByAsc(boolean, R...)}
+     * 是否按列升序排序
+     *
+     * @param columns    排序字段或列
+     * @return 返回类型自身，用于链式调用
      */
     default Self orderByAsc(R... columns) {
         return orderByAsc(true, columns);
@@ -34,7 +37,10 @@ public interface Ordering<Self, R> extends Serializable {
     Self orderByAsc(boolean append, R... columns);
 
     /**
-     * {@link Ordering#orderByDesc(boolean, R...)
+     * 是否按列降序
+     *
+     * @param columns    排序字段或列
+     * @return 返回类型自身，用于链式调用
      */
     default Self orderByDesc(R... columns) {
         return orderByDesc(true, columns);

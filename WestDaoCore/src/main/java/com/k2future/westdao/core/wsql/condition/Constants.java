@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public final class Constants {
 

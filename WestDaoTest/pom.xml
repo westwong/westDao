@@ -96,7 +96,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.k2future</groupId>
+            <groupId>io.github.westwong</groupId>
             <artifactId>westdao-core</artifactId>
             <version>${westdao.version}</version>
         </dependency>
@@ -108,15 +108,6 @@
         </dependency>
 
     </dependencies>
-
-    <developers>
-        <developer>
-            <name>westwong</name>
-            <email>deadshoot@foxmail</email>
-            <organization>k2future</organization>
-            <organizationUrl>https://www.k2future.com</organizationUrl>
-        </developer>
-    </developers>
 
     <build>
         <plugins>
@@ -134,7 +125,7 @@
                     <target>1.8</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>com.k2future</groupId>
+                            <groupId>io.github.westwong</groupId>
                             <artifactId>westdao-core</artifactId>
                             <version>${westdao.version}</version>
                         </path>

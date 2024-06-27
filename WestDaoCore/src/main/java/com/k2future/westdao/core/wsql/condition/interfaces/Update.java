@@ -10,8 +10,8 @@ import java.io.Serializable;
  * @param <Entity> 实体类型
  * @param <Self> 返回类型自身，用于链式调用
  * @param <R>    字段或列的类型
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface Update<Entity,Self, R> extends Serializable {
 
@@ -38,6 +38,7 @@ public interface Update<Entity,Self, R> extends Serializable {
     /**
      * 生成查询语句
      * generate query statement
+     * @return 生成修改语句
      */
     String updateJpql();
 

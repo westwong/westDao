@@ -120,7 +120,7 @@ Oh, and if you've read this far without following along, no problem. But if you'
 
 ```xml
 <dependency>
-    <groupId>com.k2future</groupId>
+    <groupId>io.github.westwong</groupId>
     <artifactId>westdao-core</artifactId>
     <version>1.2.4</version>
 </dependency>
@@ -133,7 +133,7 @@ Oh, and if you've read this far without following along, no problem. But if you'
         <target>1.8</target>
         <annotationProcessorPaths>
             <path>
-                <groupId>com.k2future</groupId>
+                <groupId>io.github.westwong</groupId>
                 <artifactId>westdao-core</artifactId>
                 <version>1.2.4</version>
             </path>

@@ -1,8 +1,8 @@
 package com.k2future.westdao.core.wsql.builder;
 
 /**
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public abstract class AbstractBuilder<Entity> implements JpqlBuilder<Entity> {
 

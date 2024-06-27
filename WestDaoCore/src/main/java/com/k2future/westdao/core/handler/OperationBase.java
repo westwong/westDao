@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author west
- * @Date 2024/6/24
+ * @author west
+ * @since 2024/6/24
  */
 public abstract class OperationBase {
 
@@ -29,8 +29,8 @@ public abstract class OperationBase {
      * @param cb     CriteriaBuilder
      * @param root   Root
      * @param entity entity
-     * @param <T>
-     * @return
+     * @param <T>    entity
+     * @return Predicate[]
      */
     protected <T> Predicate[] generatePredicates(CriteriaBuilder cb, Root<T> root, T entity) {
         if (!entity.getClass().isAnnotationPresent(javax.persistence.Entity.class)) {
@@ -53,15 +53,20 @@ public abstract class OperationBase {
 
     /**
      * get Clazz by Entity
+     *
      * @param entity entity
+     * @param <T>    entity
      * @return clazz
      */
     protected <T> Class<T> getClazz(T entity) {
         return EntityUtils.getClazz(entity);
     }
+
     /**
      * get id by entity
+     *
      * @param entity entity
+     * @param <T>    entity
      * @return id value
      */
     protected <T> Object getId(T entity) {

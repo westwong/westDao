@@ -5,8 +5,8 @@ import com.k2future.westdao.core.wsql.unit.JpqlQuery;
 /**
  * Builder interface for SQL and JPQL (JPA Criteria API) queries.
  *
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface JpqlBuilder<Entity> {
     /**

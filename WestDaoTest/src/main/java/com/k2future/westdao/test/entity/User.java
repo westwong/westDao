@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * @Author west
- * @Date 2024/6/12
+ * @author west
+ * @since 2024/6/12
  */
 @Entity
 @Data

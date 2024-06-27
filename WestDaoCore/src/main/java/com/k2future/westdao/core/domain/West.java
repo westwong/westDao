@@ -11,8 +11,8 @@ import java.lang.reflect.InvocationTargetException;
  * 智慧执行，简单工具
  * Wise execution, simple tools
  *
- * @Author west
- * @Date 2024/6/24
+ * @author west
+ * @since 2024/6/24
  */
 public final class West {
 

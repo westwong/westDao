@@ -15,8 +15,8 @@ import static com.k2future.westdao.core.wsql.condition.Constants.*;
 /**
  * LambdaQueryBuilder
  *
- * @Author west
- * @Date 26/06/2024
+ * @author west
+ * @since 26/06/2024
  */
 
 public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, LambdaQueryBuilder<Entity>> implements Select<LambdaQueryBuilder<Entity>, WFunction<Entity, ?>> {

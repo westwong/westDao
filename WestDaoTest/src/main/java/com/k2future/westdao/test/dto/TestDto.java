@@ -3,8 +3,8 @@ package com.k2future.westdao.test.dto;
 import lombok.Data;
 
 /**
- * @Author west
- * @Date 2024/6/27
+ * @author west
+ * @since 2024/6/27
  */
 @Data
 public class TestDto {

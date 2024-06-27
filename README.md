@@ -124,7 +124,7 @@ public class User {
 
 ```xml
 <dependency>
-    <groupId>com.k2future</groupId>
+    <groupId>io.github.westwong</groupId>
     <artifactId>westdao-core</artifactId>
     <version>1.2.4</version>
 </dependency>
@@ -137,7 +137,7 @@ public class User {
         <target>1.8</target>
         <annotationProcessorPaths>
             <path>
-                <groupId>com.k2future</groupId>
+                <groupId>io.github.westwong</groupId>
                 <artifactId>westdao-core</artifactId>
                 <version>1.2.4</version>
             </path>

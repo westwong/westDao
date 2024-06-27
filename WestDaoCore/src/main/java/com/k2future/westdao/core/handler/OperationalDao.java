@@ -11,14 +11,16 @@ import java.util.List;
  * operationalDao  like WestDao
  * {@link WestDao}
  *
- * @Author west
- * @Date 2024/6/23
+ * @author west
+ * @since 2024/6/23
  */
 public interface OperationalDao {
 
     /**
      * save
      *
+     * @param t   entity
+     * @param <T> entity
      * @return entity
      */
     <T> T save(T t);
@@ -28,6 +30,8 @@ public interface OperationalDao {
      * <p>
      * delete data based on entity
      *
+     * @param t   entity
+     * @param <T> entity
      * @return boolean
      */
     <T> int deleteAll(T t);
@@ -36,7 +40,8 @@ public interface OperationalDao {
      * delete by entity field and builder field
      *
      * @param t       entity
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param <T>     entity
+     * @param builder JpqlBuilder jpql构造器
      * @return 删除的数量
      */
     <T> int deleteAll(T t, JpqlBuilder<T> builder);
@@ -44,14 +49,16 @@ public interface OperationalDao {
     /**
      * deleteById
      *
-     * @param t entity
+     * @param t   entity
+     * @param <T> entity
      * @return boolean
      */
     <T> boolean deleteById(T t);
 
     /**
      * findById
-     *
+     * @param t entity
+     * @param <T> entity
      * @return entity
      */
     <T> T findById(T t);
@@ -59,6 +66,8 @@ public interface OperationalDao {
     /**
      * updateById
      *
+     * @param t   entity
+     * @param <T> entity
      * @return entity
      */
     <T> T updateById(T t);
@@ -68,7 +77,8 @@ public interface OperationalDao {
      * set the properties in the entity and the condition statement in the builder
      *
      * @param t       entity
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param builder JpqlBuilder jpql构造器
+     * @param <T>     entity
      * @return entity
      */
     <T> int update(T t, JpqlBuilder<T> builder);
@@ -76,7 +86,9 @@ public interface OperationalDao {
     /**
      * findAll
      *
-     * @return List<T>
+     * @param t   entity
+     * @param <T> entity
+     * @return List
      */
     <T> List<T> findAll(T t);
 
@@ -85,8 +97,9 @@ public interface OperationalDao {
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
      * @param t       entity
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return List<T>
+     * @param <T>     entity
+     * @param builder JpqlBuilder jpql构造器
+     * @return List
      */
     <T> List<T> findAll(T t, JpqlBuilder<T> builder);
 
@@ -96,7 +109,8 @@ public interface OperationalDao {
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
      * @param t       entity
-     * @param builder JpqlBuilder<T> jpql构造器
+     * @param <T>     entity
+     * @param builder JpqlBuilder jpql构造器
      * @return entity maybe null
      */
     <T> T findOne(T t, JpqlBuilder<T> builder);
@@ -105,7 +119,8 @@ public interface OperationalDao {
      * 查找条件为 entity 的属性
      * search conditions are combined by the properties of the entity
      *
-     * @param t entity
+     * @param t   entity
+     * @param <T> entity
      * @return entity maybe null
      */
     <T> T findOne(T t);
@@ -113,8 +128,10 @@ public interface OperationalDao {
     /**
      * page
      *
+     * @param t    entity
+     * @param <T>  entity
      * @param page pageParam
-     * @return List<T>
+     * @return List
      */
     <T> Page<T> page(T t, Pageable page);
 
@@ -123,9 +140,10 @@ public interface OperationalDao {
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
      * @param t       entity
+     * @param <T>     entity
      * @param page    pageParam
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return Page<T>
+     * @param builder JpqlBuilder jpql构造器
+     * @return Page
      */
     <T> Page<T> page(T t, Pageable page, JpqlBuilder<T> builder);
 
@@ -142,8 +160,9 @@ public interface OperationalDao {
      * 查找条件由 entity 的属性 与 builder 的属性组合
      * search conditions are combined by the properties of the entity and the properties of the builder
      *
-     * @param builder JpqlBuilder<T> jpql构造器
-     * @return Page<T>
+     * @param builder JpqlBuilder jpql构造器
+     * @param <T>     entity
+     * @return Page
      */
     <T> long count(JpqlBuilder<T> builder);
 

@@ -10,13 +10,19 @@ import java.io.Serializable;
  *
  * @param <Self> 返回类型自身，用于链式调用
  * @param <R>    分组字段或列的类型
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public interface Grouping<Self, R> extends Serializable {
 
     /**
-     * {@link Grouping#groupBy(boolean, R...)}
+     * 添加带条件的分组条件
+     * <p>
+     * Add grouping
+     * </p>
+     *
+     * @param columns    分组字段或列
+     * @return 返回类型自身，用于链式调用
      */
     default Self groupBy(R... columns) {
         return groupBy(true, columns);

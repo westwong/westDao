@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 import static com.k2future.westdao.core.wsql.condition.Constants.*;
 
 /**
- * @Author west
- * @Date 2024/6/25
+ * @author west
+ * @since 2024/6/25
  */
 public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Entity, Self, R>, R> extends AbstractBuilder<Entity> implements Condition<Self, R>, ConditionConnect<Self>,
         Grouping<Self, R>, Ordering<Self, R> {
@@ -67,6 +67,8 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     /**
      * 子类返回一个自己的新对象
+     *
+     * @return 自己的新对象
      */
     protected abstract Self instance();
 
@@ -81,7 +83,9 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     protected Class<Entity> clazz = null;
 
     /**
-     * clazz
+     *
+     * @param entity 实体
+     * @param clazz 类名
      */
     public AbstactCondition(Entity entity, Class<Entity> clazz) {
         if (entity != null) {

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author west
- * @Date 2024/6/22
+ * @author west
+ * @since 2024/6/22
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

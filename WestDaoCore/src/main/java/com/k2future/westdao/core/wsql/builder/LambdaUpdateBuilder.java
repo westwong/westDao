@@ -15,8 +15,8 @@ import static com.k2future.westdao.core.wsql.condition.Constants.*;
 /**
  * LambdaUpdateBuilder
  *
- * @Author west
- * @Date 26/06/2024
+ * @author west
+ * @since 26/06/2024
  */
 
 public class LambdaUpdateBuilder<Entity> extends AbstractLambdaCondition<Entity, LambdaUpdateBuilder<Entity>> implements Update<Entity, LambdaUpdateBuilder<Entity>, WFunction<Entity, ?>> {

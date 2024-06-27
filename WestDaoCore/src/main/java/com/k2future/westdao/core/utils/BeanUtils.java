@@ -10,10 +10,15 @@ import java.util.Set;
 
 /**
  * @author West
- * @date create in 2019/9/3
+ * @since create in 2019/9/3
  */
 public class BeanUtils extends org.springframework.beans.BeanUtils {
 
+    /**
+     * 获取对象属性为空的属性名
+     * @param source 对象
+     * @return 属性名数组
+     */
     public static String[] getNullPropertyNames(Object source) {
         final BeanWrapper src = new BeanWrapperImpl(source);
         java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
@@ -45,7 +50,7 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
      * 根据属性名访问属性
      * @param fieldName 属性名
      * @param object 被访问对象
-     * @return
+     * @return 属性值
      */
     public static String getFieldValueByFieldName(String fieldName,Object object){
         try {
