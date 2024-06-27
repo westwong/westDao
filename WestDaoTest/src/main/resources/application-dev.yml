@@ -1,0 +1,23 @@
+server:
+  port: 8376
+  undertow:
+    threads:
+      worker: 32
+      io: 8
+    direct-buffers: true
+spring:
+  application:
+    name: westDao
+  datasource:
+    url: jdbc:mysql://192.168.31.88:3306/west_dao
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect

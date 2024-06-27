@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.k2future.westdao.core.config.WestDaoAutoConfiguration
