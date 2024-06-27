@@ -2,7 +2,7 @@
 
 ## [WestDao](https://github.com/westwong/westDao)
 
-[中文版](https://github.com/westwong/westDao/blob/master/README-cn.md)
+[中文版](https://github.com/westwong/westDao/blob/master/README.md)
 
 Welcome to WestDao! This project aims to simplify daily development tasks with less code. Let's dive straight into a DEMO:
 
