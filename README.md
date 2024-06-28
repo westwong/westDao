@@ -123,26 +123,32 @@ public class User {
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
 
 ```xml
+
 <dependency>
-    <groupId>io.github.westwong</groupId>
+    <groupId>com.k2future</groupId>
     <artifactId>westdao-core</artifactId>
     <version>1.2.4</version>
 </dependency>
 <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <version>3.8.1</version>
-    <configuration>
-        <source>1.8</source>
-        <target>1.8</target>
-        <annotationProcessorPaths>
-            <path>
-                <groupId>io.github.westwong</groupId>
-                <artifactId>westdao-core</artifactId>
-                <version>1.2.4</version>
-            </path>
-        </annotationProcessorPaths>
-    </configuration>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.8.1</version>
+<configuration>
+    <source>1.8</source>
+    <target>1.8</target>
+    <annotationProcessorPaths>
+        <path>
+            <groupId>io.github.westwong</groupId>
+            <artifactId>westdao-core</artifactId>
+            <version>1.2.4</version>
+        </path>
+         <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.24</version>
+         </path>
+    </annotationProcessorPaths>
+</configuration>
 </plugin>
 ```
 

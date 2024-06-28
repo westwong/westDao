@@ -16,7 +16,6 @@ public class WestUserController {
     }
 }
 ```
-
 With just a few lines of code, you can save user information.
 
 ```
@@ -120,7 +119,7 @@ Oh, and if you've read this far without following along, no problem. But if you'
 
 ```xml
 <dependency>
-    <groupId>io.github.westwong</groupId>
+    <groupId>com.k2future</groupId>
     <artifactId>westdao-core</artifactId>
     <version>1.2.4</version>
 </dependency>
@@ -132,11 +131,16 @@ Oh, and if you've read this far without following along, no problem. But if you'
         <source>1.8</source>
         <target>1.8</target>
         <annotationProcessorPaths>
-            <path>
-                <groupId>io.github.westwong</groupId>
-                <artifactId>westdao-core</artifactId>
-                <version>1.2.4</version>
-            </path>
+        <path>
+            <groupId>io.github.westwong</groupId>
+            <artifactId>westdao-core</artifactId>
+            <version>1.2.4</version>
+        </path>
+         <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.24</version>
+         </path>
         </annotationProcessorPaths>
     </configuration>
 </plugin>

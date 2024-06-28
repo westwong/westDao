@@ -96,9 +96,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.westwong</groupId>
+            <groupId>com.k2future</groupId>
             <artifactId>westdao-core</artifactId>
-            <version>${westdao.version}</version>
+            <version>1.2.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -125,7 +125,7 @@
                     <target>1.8</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>io.github.westwong</groupId>
+                            <groupId>com.k2future</groupId>
                             <artifactId>westdao-core</artifactId>
                             <version>${westdao.version}</version>
                         </path>
