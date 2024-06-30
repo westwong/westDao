@@ -156,6 +156,9 @@ public class LikeUser extends User implements WestDao<User>
 public class MyUser extends User implements WestDao<User>
 ```
 
+Supported versions: Spring Boot 2.X  、JDK 1.8+
+For accuracy, the version I tested is: 2.3.12.RELEASE
+
 If you're a beginner, check out the complete [pom](https://github.com/westwong/westDao/blob/master/WestDaoTest/pom.xml) file. Still confused? Take a look at the [testDemo](https://github.com/westwong/westDao/tree/master/WestDaoTest). Have more questions? Email me at deadshoot@foxmail.com.
 
 Finally, I welcome contributions from all experts. Submit [Issues](https://github.com/westwong/westDao/issues) and [Pull Requests](https://github.com/westwong/westDao/pulls).
