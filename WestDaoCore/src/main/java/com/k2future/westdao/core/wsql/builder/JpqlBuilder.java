@@ -16,16 +16,6 @@ public interface JpqlBuilder<Entity> {
      * @return JPQL query string
      */
     JpqlQuery jpql();
-
-    /**
-     * Get the JPQL (JPA Criteria API) query string.
-     * 获取 jpql 和 参数
-     *
-     * @param refresh refresh 如果传入true，每次都会重新生成JPQL语句
-     * @return JPQL query string
-     */
-    JpqlQuery jpql(boolean refresh);
-
     /**
      * 合并 新的实体 和 实体
      * Merge the new entity with entity.

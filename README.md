@@ -51,7 +51,7 @@ public class WestUserController {
 
 ```java
 private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
-    return West.<User>lambdaQuery()
+    return West.<User>queryJPQL()
             .eq(dto.isEq(), User::getId, 20L)
             .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())
             ))
@@ -74,10 +74,10 @@ private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
 ```
 
 ```
-@RequestMapping("/bd/user/update")
+@RequestMapping("/v1/user/update")
 public Result<Object> updateToPrams(WestUser user) {
     int num = user.update(
-            West.lambdaUpdate(User.class).update(new User().setAge(10)).eq(User::getId, 20L)
+            West.updateJPQL(User.class).update(new User().setAge(10)).eq(User::getId, 20L)
     );
     return Result.successResult(num);
 }
@@ -127,7 +127,7 @@ public class User {
 <dependency>
     <groupId>com.k2future</groupId>
     <artifactId>westdao-core</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 <plugin>
 <groupId>org.apache.maven.plugins</groupId>
@@ -140,7 +140,7 @@ public class User {
         <path>
             <groupId>io.github.westwong</groupId>
             <artifactId>westdao-core</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
         </path>
          <path>
               <groupId>org.projectlombok</groupId>

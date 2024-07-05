@@ -1,8 +1,8 @@
 package com.k2future.westdao.core.wsql.builder;
 
 import com.k2future.westdao.core.wsql.condition.interfaces.Select;
-import com.k2future.westdao.core.wsql.tools.WFunction;
 import com.k2future.westdao.core.wsql.unit.KV;
+import com.k2future.westdao.core.wsql.unit.WFunction;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -19,10 +19,8 @@ import static com.k2future.westdao.core.wsql.condition.Constants.*;
  * @since 26/06/2024
  */
 
-public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, LambdaQueryBuilder<Entity>> implements Select<LambdaQueryBuilder<Entity>, WFunction<Entity, ?>> {
+public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCondition<Entity, Self>> extends AbstractLambdaCondition<Entity, Self> implements Select<Self, WFunction<Entity, ?>> {
 
-
-    private static final long serialVersionUID = -6878283508036582697L;
     /**
      * 查询结果字段
      */
@@ -32,12 +30,8 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
      */
     private Integer limit = null;
 
-    public LambdaQueryBuilder(Class<Entity> clazz) {
-        super(null, clazz);
-    }
-
-    public LambdaQueryBuilder(Entity entity) {
-        super(entity, null);
+    public LambdaQueryBuilder(Entity entity, Class<Entity> clazz) {
+        super(entity, clazz);
     }
 
     public LambdaQueryBuilder() {
@@ -50,19 +44,15 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
     }
 
     @Override
-    public LambdaQueryBuilder<Entity> limit(Integer limit) {
+    public Self limit(Integer limit) {
         this.limit = limit;
         return self;
     }
 
-    @Override
-    protected LambdaQueryBuilder<Entity> instance() {
-        return new LambdaQueryBuilder<>();
-    }
 
     @SafeVarargs
     @Override
-    public final LambdaQueryBuilder<Entity> select(WFunction<Entity, ?>... columns) {
+    public final Self select(WFunction<Entity, ?>... columns) {
         addColumn(columns);
         if (selectResult == null) {
             selectResult = new KV<>(SELECT, Arrays.asList(columns));
@@ -72,7 +62,7 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
 
     @SafeVarargs
     @Override
-    public final LambdaQueryBuilder<Entity> selectDistinct(WFunction<Entity, ?>... columns) {
+    public final Self selectDistinct(WFunction<Entity, ?>... columns) {
         addColumn(columns);
         if (selectResult == null) {
             selectResult = new KV<>(SELECT_DISTINCT, Arrays.asList(columns));
@@ -82,7 +72,7 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
 
     @SafeVarargs
     @Override
-    public final LambdaQueryBuilder<Entity> selectCount(WFunction<Entity, ?>... columns) {
+    public final Self selectCount(WFunction<Entity, ?>... columns) {
         addColumn(columns);
         if (selectResult == null) {
             selectResult = new KV<>(SELECT_COUNT, Arrays.asList(columns));
@@ -91,7 +81,7 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
     }
 
     @Override
-    public LambdaQueryBuilder<Entity> select(String columns) {
+    public Self select(String columns) {
         if (selectResult == null) {
             selectResult = new KV<>(SELECT_String, columns);
         }
@@ -106,7 +96,8 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
         }
         String key = selectResult.getKey();
         if (SELECT_String.equals(key)) {
-            sb.append(selectResult.getValue());
+            sb.append(selectResult.getValue())
+                    .append(SPACE);
             return sb;
         }
 
@@ -143,7 +134,7 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
 
 
     @Override
-    public String selectJpql() {
+    public final String selectJpql() {
         StringBuilder sb = new StringBuilder();
         sb.append(SELECT).append(SPACE);
         StringBuffer selectResultSql = getSelectResultSql();
@@ -153,7 +144,7 @@ public class LambdaQueryBuilder<Entity> extends AbstractLambdaCondition<Entity, 
     }
 
     @Override
-    public String operationJpql() {
+    public final String operationJpql() {
         return selectJpql();
     }
 }

@@ -42,6 +42,8 @@ public final class Constants {
     public static final String DESC = "DESC";
     public static final String GROUP_BY = "GROUP_BY";
     public static final String ORDER_BY = "ORDER_BY";
+    public static final String HAVING = "HAVING";
+    public static final String LAST = "LAST";
     public static final String LIMIT = "LIMIT";
     public static final String OFFSET = "OFFSET";
     public static final String WHERE = "WHERE";

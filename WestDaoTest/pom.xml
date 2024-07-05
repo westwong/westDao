@@ -23,7 +23,7 @@
         <java.version>1.8</java.version>
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
         <javapoet.version>1.12.1</javapoet.version>
-        <westdao.version>1.2.4</westdao.version>
+        <westdao.version>1.2.5</westdao.version>
 
     </properties>
     <dependencyManagement>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>com.k2future</groupId>
             <artifactId>westdao-core</artifactId>
-            <version>1.2.4</version>
+            <version>${westdao.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

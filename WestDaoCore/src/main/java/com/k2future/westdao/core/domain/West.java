@@ -1,15 +1,19 @@
 package com.k2future.westdao.core.domain;
 
 import com.k2future.westdao.core.handler.WestDao;
-import com.k2future.westdao.core.wsql.builder.LambdaDeleteBuilder;
-import com.k2future.westdao.core.wsql.builder.LambdaQueryBuilder;
-import com.k2future.westdao.core.wsql.builder.LambdaUpdateBuilder;
+import com.k2future.westdao.core.wsql.executor.LambdaDelete;
+import com.k2future.westdao.core.wsql.executor.LambdaQuery;
+import com.k2future.westdao.core.wsql.executor.LambdaUpdate;
+import com.k2future.westdao.core.wsql.executor.interfaces.WestDelete;
+import com.k2future.westdao.core.wsql.executor.interfaces.WestQuery;
+import com.k2future.westdao.core.wsql.executor.interfaces.WestUpdate;
 
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * 智慧执行，简单工具
  * Wise execution, simple tools
+ * 本类提供静态工厂方法来创建各种构建器和执行器的实例，用于 CRUD 操作和查询。
  *
  * @author west
  * @since 2024/6/24
@@ -21,154 +25,119 @@ public final class West {
 
     /**
      * 创建一个给定类的实例，该类必须实现 WestDao 接口。
-     * Creates an instance of the given class which must implement the WestDao interface.
      *
      * @param clazz 表示要实例化的类的 Class 对象
-     *              the Class object representing the class to instantiate
      * @param <T>   要创建的对象的类型
-     *              the type of the object to be created
      * @return 指定类的实例
-     * an instance of the specified class
      * @throws RuntimeException 如果类无法实例化或不实现 WestDao 接口
-     *                          if the class cannot be instantiated or does not implement WestDao
      */
     public static <T> T dao(Class<T> clazz) {
         try {
             T instance = clazz.getDeclaredConstructor().newInstance();
             if (!(instance instanceof WestDao)) {
-                throw new IllegalArgumentException("The class is not an instance of WestDao");
+                throw new IllegalArgumentException("该类不是 WestDao 的实现类");
             }
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
-            throw new RuntimeException("Failed to create instance of " + clazz.getName(), e);
+            throw new RuntimeException("无法创建类的实例：" + clazz.getName(), e);
         }
     }
 
     /**
-     * 创建一个用于更新操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for update operations.
-     *
-     * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
+     * 创建一个用于更新操作的 LambdaUpdate。
+     * 可以调用 {@link WestUpdate}的方法来执行更新操作
+     * @param <T> 实体类的类型
+     * @return 一个新的 LambdaUpdate 实例
      */
-    public static <T> LambdaUpdateBuilder<T> lambdaUpdate() {
-        return new LambdaUpdateBuilder<>();
+    public static <T> LambdaUpdate<T> updateJPQL() {
+        return new LambdaUpdate<>();
     }
 
     /**
-     * 创建一个用于更新操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for update operations.
+     * 创建一个用于更新操作的 LambdaUpdate。
+     * 可以调用 {@link WestUpdate}的方法来执行更新操作
+     * @param clazz 表示要操作的实体类的 Class 对象
+     * @param <T>   实体类的类型
+     * @return 一个新的 LambdaUpdate 实例
+     */
+    public static <T> LambdaUpdate<T> updateJPQL(Class<T> clazz) {
+        return new LambdaUpdate<>(clazz);
+    }
+
+    /**
+     * 创建一个用于更新操作的 LambdaUpdate。
+     * 可以调用 {@link WestUpdate}的方法来执行更新操作
+     * @param entity 要操作的实体实例
+     * @param <T>    实体类的类型
+     * @return 一个新的 LambdaUpdate 实例
+     */
+    public static <T> LambdaUpdate<T> updateJPQL(T entity) {
+        return new LambdaUpdate<>(entity);
+    }
+
+    /**
+     * 创建一个用于查询操作的 LambdaQuery。
+     * 可以调用 {@link WestQuery}的方法来执行查询操作
      *
      * @param clazz 表示要操作的实体类的 Class 对象
-     *              the Class object representing the entity class to operate on
      * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
+     * @return 一个新的 LambdaQuery 实例
      */
-    public static <T> LambdaUpdateBuilder<T> lambdaUpdate(Class<T> clazz) {
-        return new LambdaUpdateBuilder<>(clazz);
+    public static <T> LambdaUpdate<T> queryJPQL(Class<T> clazz) {
+        return new LambdaUpdate<>(clazz);
     }
 
     /**
-     * 创建一个用于更新操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for update operations.
-     *
+     * 创建一个用于查询操作的 LambdaQuery。
+     * 可以调用 {@link WestQuery}的方法来执行查询操作
+     * @param <T> 实体类的类型
+     * @return 一个新的 LambdaQuery 实例
+     */
+    public static <T> LambdaQuery<T> queryJPQL() {
+        return new LambdaQuery<>();
+    }
+
+    /**
+     * 创建一个用于查询操作的 LambdaQuery。
+     * 可以调用 {@link WestQuery}的方法来执行查询操作
      * @param entity 要操作的实体实例
-     *               the entity instance to operate on
      * @param <T>    实体类的类型
-     *               the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
+     * @return 一个新的 LambdaQuery 实例
      */
-    public static <T> LambdaUpdateBuilder<T> lambdaUpdate(T entity) {
-        return new LambdaUpdateBuilder<>(entity);
+    public static <T> LambdaQuery<T> queryJPQL(T entity) {
+        return new LambdaQuery<>(entity);
     }
 
     /**
-     * 创建一个用于查询操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for select operations.
-     *
+     * 创建一个用于删除操作的 LambdaDelete。
+     * 可以调用 {@link WestDelete}的方法来执行删除操作
+     * @param <T> 实体类的类型
+     * @return 一个新的 LambdaDelete 实例
+     */
+    public static <T> LambdaDelete<T> deleteJPQL() {
+        return new LambdaDelete<>();
+    }
+
+    /**
+     * 创建一个用于删除操作的 LambdaDelete。
+     * 可以调用 {@link WestDelete}的方法来执行删除操作
      * @param clazz 表示要操作的实体类的 Class 对象
-     *              the Class object representing the entity class to operate on
      * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
+     * @return 一个新的 LambdaDelete 实例
      */
-    public static <T> LambdaQueryBuilder<T> lambdaQuery(Class<T> clazz) {
-        return new LambdaQueryBuilder<>(clazz);
-    }
-    /**
-     * 创建一个用于查询操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for select operations.
-     *
-     * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
-     */
-    public static <T> LambdaQueryBuilder<T> lambdaQuery() {
-        return new LambdaQueryBuilder<>();
+    public static <T> LambdaDelete<T> deleteJPQL(Class<T> clazz) {
+        return new LambdaDelete<>(clazz);
     }
 
     /**
-     * 创建一个用于查询操作的 LambdaQueryBuilder。
-     * Creates a LambdaQueryBuilder for select operations.
-     *
+     * 创建一个用于删除操作的 LambdaDelete。
+     * 可以调用 {@link WestDelete}的方法来执行删除操作
      * @param entity 要操作的实体实例
-     *               the entity instance to operate on
      * @param <T>    实体类的类型
-     *               the type of the entity class
-     * @return 一个新的 LambdaQueryBuilder 实例
-     * a new LambdaQueryBuilder instance
+     * @return 一个新的 LambdaDelete 实例
      */
-    public static <T> LambdaQueryBuilder<T> lambdaQuery(T entity) {
-        return new LambdaQueryBuilder<>(entity);
-    }
-
-    /**
-     * 创建一个用于删除操作的 LambdaDeleteBuilder。
-     * Creates a LambdaDeleteBuilder for delete operations.
-     *
-     * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaDeleteBuilder 实例
-     * a new LambdaDeleteBuilder instance
-     */
-    public static <T> LambdaDeleteBuilder<T> lambdaDelete() {
-        return new LambdaDeleteBuilder<>();
-    }
-    /**
-     * 创建一个用于删除操作的 LambdaDeleteBuilder。
-     * Creates a LambdaDeleteBuilder for delete operations.
-     *
-     * @param clazz 表示要操作的实体类的 Class 对象
-     *              the Class object representing the entity class to operate on
-     * @param <T>   实体类的类型
-     *              the type of the entity class
-     * @return 一个新的 LambdaDeleteBuilder 实例
-     * a new LambdaDeleteBuilder instance
-     */
-    public static <T> LambdaDeleteBuilder<T> lambdaDelete(Class<T> clazz) {
-        return new LambdaDeleteBuilder<>(clazz);
-    }
-
-    /**
-     * 创建一个用于删除操作的 LambdaDeleteBuilder。
-     * Creates a LambdaDeleteBuilder for delete operations.
-     *
-     * @param entity 要操作的实体实例
-     *               the entity instance to operate on
-     * @param <T>    实体类的类型
-     *               the type of the entity class
-     * @return 一个新的 LambdaDeleteBuilder 实例
-     * a new LambdaDeleteBuilder instance
-     */
-    public static <T> LambdaDeleteBuilder<T> lambdaDelete(T entity) {
-        return new LambdaDeleteBuilder<>(entity);
+    public static <T> LambdaDelete<T> deleteJPQL(T entity) {
+        return new LambdaDelete<>(entity);
     }
 }

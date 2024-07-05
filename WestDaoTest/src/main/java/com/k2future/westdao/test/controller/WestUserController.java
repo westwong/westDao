@@ -1,7 +1,7 @@
 package com.k2future.westdao.test.controller;
 
 import com.k2future.westdao.core.domain.West;
-import com.k2future.westdao.core.wsql.builder.LambdaQueryBuilder;
+import com.k2future.westdao.core.wsql.executor.LambdaQuery;
 import com.k2future.westdao.test.dto.TestDto;
 import com.k2future.westdao.test.entity.User;
 import com.k2future.westdao.test.entity.UserInfo;
@@ -15,8 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * West UserController
@@ -91,51 +94,51 @@ public class WestUserController {
         return Result.successResult(one);
     }
 
-    @RequestMapping("/bd/user/deleteAll")
+    @RequestMapping("/v1/user/deleteAll")
     public Result<Object> deleteAll(WestUser user) {
 
         int num = user.deleteAll(
-                West.lambdaDelete(User.class).eq(User::getName, "west").or(q -> q.isNull(User::getAge))
+                West.deleteJPQL(User.class).eq(User::getName, "west").or(q -> q.isNull(User::getAge))
         );
         return Result.successResult(num);
     }
 
 
-    @RequestMapping("/bd/user/update")
+    @RequestMapping("/v1/user/update")
     public Result<Object> updateToPrams(WestUser user) {
         int num = user.update(
-                West.lambdaUpdate(User.class).update(new User().setAge(10)).set(User::getAge, 10).eq(User::getId, 20L)
+                West.updateJPQL(User.class).update(new User().setAge(10)).set(User::getAge, 10).eq(User::getId, 20L)
         );
         return Result.successResult(num);
     }
 
-    @RequestMapping("/bd/user/findAll")
+    @RequestMapping("/v1/user/findAll")
     public Result<Object> findALLByBd(TestDto dto) {
         WestUser dao = West.dao(WestUser.class);
         List<User> all = dao.findAll(
-                getBuilder(dto)
+                getJPQL(dto)
         );
         return Result.successResult(all);
     }
 
-    @RequestMapping("/bd/user/findOne")
+    @RequestMapping("/v1/user/findOne")
     public Result<Object> findOneByBd(TestDto dto) {
         User one = West.dao(WestUser.class).findOne(
-                getBuilder(dto)
+                getJPQL(dto)
         );
         return Result.successResult(one);
     }
 
-    @RequestMapping("/bd/user/page")
+    @RequestMapping("/v1/user/page")
     public Result<Object> pageByBd(TestDto dto) {
         Page<User> page = West.dao(WestUser.class).page(PageRequest.of(dto.getPageNum(), dto.getPageSize()),
-                getBuilder(dto)
+                getJPQL(dto)
         );
         return Result.successResult(page);
     }
 
-    private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
-        return West.<User>lambdaQuery()
+    private static LambdaQuery<User> getJPQL(TestDto dto) {
+        return West.<User>queryJPQL()
                 .eq(dto.isEq(), User::getId, 20L)
                 .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())
                 ))
@@ -155,5 +158,49 @@ public class WestUserController {
                 .isNotNull(dto.isWasNotNull(), User::getName)
                 .inJPQL(dto.isInJpql(), User::getName, "select nickName from UserInfo where id = 1");
     }
+
+
+    @RequestMapping("/v2/user/update")
+    @Transactional
+    public Result<Object> updateToPramsV2(User user) {
+        int execute = West.updateJPQL(user).eq(User::getId, 20L).execute();
+        return Result.successResult(execute);
+    }
+
+    @RequestMapping("/v2/user/findAll")
+    public Result<Object> findALLByBdV2(TestDto dto) {
+        Map<String, Object> count = getJPQL(dto).select("count(1) as total").getMap();
+        Map<String, Object> map = getJPQL(dto).getMap();
+        List<Map<String, Object>> maps = getJPQL(dto).listMap();
+        User entity = getJPQL(dto).getEntity();
+        List<User> users = getJPQL(dto).listEntity();
+        Map<String, Object> result = new HashMap<>(4);
+        result.put("count", count);
+        result.put("map", map);
+        result.put("maps", maps);
+        result.put("entity", entity);
+        result.put("users", users);
+        return Result.successResult(result);
+    }
+
+    @RequestMapping("/v2/user/page")
+    public Result<Object> pageV2(TestDto dto) {
+        Page<User> pageUser = getJPQL(dto).pageEntity(PageRequest.of(dto.getPageNum(), dto.getPageSize()));
+        Page<Map<String, Object>> pageMap = getJPQL(dto).pageMap(PageRequest.of(dto.getPageNum(), dto.getPageSize()));
+        Map<String, Object> result = new HashMap<>(4);
+        result.put("map", pageMap);
+        result.put("users", pageUser);
+        return Result.successResult(result);
+    }
+
+    @RequestMapping("/v2/user/deleteAll")
+    @Transactional
+    public Result<Object> deleteAllV2(User user) {
+
+        int execute = West.deleteJPQL(user).execute();
+
+        return Result.successResult(execute);
+    }
+
 
 }

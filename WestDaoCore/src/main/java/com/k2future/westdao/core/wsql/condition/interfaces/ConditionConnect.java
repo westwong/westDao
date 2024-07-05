@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
- *  条件连接语句
+ * 条件连接语句
  *
  * @param <Self> 返回类型自身，用于链式调用
  * @author west
@@ -18,33 +18,36 @@ public interface ConditionConnect<Self> extends Serializable {
      * @param consumer 提供条件链接构造器
      * @return 返回类型自身，用于链式调用
      */
-    default Self and(Consumer<Self> consumer){
-        return and(true,consumer);
+    default Self and(Consumer<Self> consumer) {
+        return and(true, consumer);
     }
 
     /**
      * and 条件连接 and ()
      *
-     * @param append 是否写入
+     * @param append   是否写入
      * @param consumer 提供条件链接构造器
      * @return 返回类型自身，用于链式调用
      */
-    Self and(boolean append,Consumer<Self> consumer);
+    Self and(boolean append, Consumer<Self> consumer);
+
     /**
      * or 条件连接  or ()
      *
+     * @param consumer 提供条件链接构造器
      * @return 返回类型自身，用于链式调用
      */
-    default Self or(Consumer<Self> consumer){
-        return or(true,consumer);
+    default Self or(Consumer<Self> consumer) {
+        return or(true, consumer);
     }
 
     /**
      * or 条件连接  or ()
      *
-     * @param append 是否写入
+     * @param append   是否写入
+     * @param consumer 提供条件链接构造器
      * @return 返回类型自身，用于链式调用
      */
-    Self or(boolean append,Consumer<Self> consumer);
+    Self or(boolean append, Consumer<Self> consumer);
 
 }

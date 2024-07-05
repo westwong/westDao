@@ -1,4 +1,6 @@
-package com.k2future.westdao.core.wsql.tools;
+package com.k2future.westdao.core.utils;
+
+import com.k2future.westdao.core.wsql.unit.WFunction;
 
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Method;

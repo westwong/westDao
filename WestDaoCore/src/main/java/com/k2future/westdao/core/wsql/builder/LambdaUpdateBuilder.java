@@ -2,8 +2,8 @@ package com.k2future.westdao.core.wsql.builder;
 
 import com.k2future.westdao.core.utils.EntityUtils;
 import com.k2future.westdao.core.wsql.condition.interfaces.Update;
-import com.k2future.westdao.core.wsql.tools.WFunction;
 import com.k2future.westdao.core.wsql.unit.KV;
+import com.k2future.westdao.core.wsql.unit.WFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import static com.k2future.westdao.core.wsql.condition.Constants.*;
  * @since 26/06/2024
  */
 
-public class LambdaUpdateBuilder<Entity> extends AbstractLambdaCondition<Entity, LambdaUpdateBuilder<Entity>> implements Update<Entity, LambdaUpdateBuilder<Entity>, WFunction<Entity, ?>> {
+public abstract class LambdaUpdateBuilder<Entity, Self extends AbstractLambdaCondition<Entity, Self>> extends AbstractLambdaCondition<Entity, Self> implements Update<Entity, Self, WFunction<Entity, ?>> {
 
 
     /**
@@ -29,14 +29,8 @@ public class LambdaUpdateBuilder<Entity> extends AbstractLambdaCondition<Entity,
 
     private Map<String, Object> updateEntityParameters = new HashMap<>();
 
-    private static final long serialVersionUID = -687L;
-
-    public LambdaUpdateBuilder(Class<Entity> clazz) {
-        super(null, clazz);
-    }
-
-    public LambdaUpdateBuilder(Entity entity) {
-        super(entity, null);
+    public LambdaUpdateBuilder(Entity entity, Class<Entity> clazz) {
+        super(entity, clazz);
     }
 
     public LambdaUpdateBuilder() {
@@ -44,17 +38,13 @@ public class LambdaUpdateBuilder<Entity> extends AbstractLambdaCondition<Entity,
     }
 
     @Override
-    public LambdaUpdateBuilder<Entity> update(Entity updateEntity) {
+    public final Self update(Entity updateEntity) {
         if (updateEntity != null) {
             updateEntityParameters = EntityUtils.parseEntity(updateEntity);
         }
         return self;
     }
 
-    @Override
-    protected LambdaUpdateBuilder<Entity> instance() {
-        return new LambdaUpdateBuilder<>();
-    }
 
     @Override
     protected String operationJpql() {
@@ -62,14 +52,14 @@ public class LambdaUpdateBuilder<Entity> extends AbstractLambdaCondition<Entity,
     }
 
     @Override
-    public LambdaUpdateBuilder<Entity> set(WFunction<Entity, ?> column, Object val) {
+    public final Self set(WFunction<Entity, ?> column, Object val) {
         updateList.add(new KV<>(column, val));
         return self;
     }
 
 
     @Override
-    public String updateJpql() {
+    public final String updateJpql() {
         StringBuilder sb = new StringBuilder();
         if (entityParameters != null) {
             // 修改entity的内容 Entity也为待修改的

@@ -2,11 +2,13 @@ package com.k2future.westdao.core.handler;
 
 import com.k2future.westdao.core.domain.West;
 import com.k2future.westdao.core.utils.BeanUtils;
+import com.k2future.westdao.core.utils.JPAUtils;
 import com.k2future.westdao.core.wsql.builder.JpqlBuilder;
 import com.k2future.westdao.core.wsql.builder.LambdaQueryBuilder;
 import com.k2future.westdao.core.wsql.condition.interfaces.Delete;
 import com.k2future.westdao.core.wsql.condition.interfaces.Select;
 import com.k2future.westdao.core.wsql.condition.interfaces.Update;
+import com.k2future.westdao.core.wsql.executor.LambdaQuery;
 import com.k2future.westdao.core.wsql.unit.JpqlQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author west
@@ -131,34 +132,15 @@ public class OperationManager extends OperationBase implements OperationalDao {
      *
      * @param t       entity
      * @param builder JpqlBuilder<T> jpql构造器
-     * @param refresh 是否刷新
-     * @param <T>     entity
-     * @return Query
-     */
-    private <T> Query getQuery(T t, JpqlBuilder<T> builder, boolean refresh) {
-        builder.mergeEntity(t);
-        JpqlQuery jpqlQuery = builder.jpql(refresh);
-        String jpql = jpqlQuery.getJpql();
-        Map<String, Object> parameters = jpqlQuery.getParameters();
-        Query query = entityManager.createQuery(jpql);
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
-
-        return query;
-    }
-
-    /**
-     * 生成 qeury
-     *
-     * @param t       entity
-     * @param builder JpqlBuilder<T> jpql构造器
      * @param <T>     entity
      * @return Query
      */
     private <T> Query getQuery(T t, JpqlBuilder<T> builder) {
-        return getQuery(t, builder, false);
+        builder.mergeEntity(t);
+        JpqlQuery jpqlQuery = builder.jpql();
+        return JPAUtils.getQuery(jpqlQuery, entityManager);
     }
+
 
     @Override
     @Transactional
@@ -206,7 +188,7 @@ public class OperationManager extends OperationBase implements OperationalDao {
 
     @Override
     public <T> T findOne(T t) {
-        LambdaQueryBuilder<T> builder = West.lambdaQuery(t);
+        LambdaQuery<T> builder = West.queryJPQL(t);
         return this.findOne(null, builder);
     }
 
@@ -223,9 +205,9 @@ public class OperationManager extends OperationBase implements OperationalDao {
     @Override
     public <T> long count(JpqlBuilder<T> builder) {
         Assert.isTrue(builder instanceof LambdaQueryBuilder, "builder must be Select");
-        LambdaQueryBuilder<T> select = (LambdaQueryBuilder<T>) builder;
+        LambdaQuery<T> select = (LambdaQuery<T>) builder;
         select.selectCount();
-        Query query = getQuery(null, builder, true);
+        Query query = getQuery(null, builder);
         return (long) query.getSingleResult();
     }
 

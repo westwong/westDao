@@ -57,7 +57,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      */
     protected Set<R> columnSet = new HashSet<>();
 
-
     /**
      * 添加参数
      */
@@ -81,11 +80,14 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     protected Entity entity;
 
     protected Class<Entity> clazz = null;
+    /**
+     * 别名
+     */
+    private String alias = "e";
 
     /**
-     *
      * @param entity 实体
-     * @param clazz 类名
+     * @param clazz  类名
      */
     public AbstactCondition(Entity entity, Class<Entity> clazz) {
         if (entity != null) {
@@ -117,14 +119,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     @Override
     public JpqlQuery jpql() {
-        return jpql(false);
-    }
-
-    @Override
-    public JpqlQuery jpql(boolean refresh) {
-        if (jpqlQuery != null && !refresh) {
-            return jpqlQuery;
-        }
         init();
         String operation = operationJpql();
         String jpql = whereJpql();
@@ -278,7 +272,16 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      * @return 实体别名
      */
     protected String getEntityAlias() {
-        return "e";
+        return alias;
+    }
+
+    /**
+     * 设置别名
+     *
+     * @param alias 别名
+     */
+    protected void setEntityAlias(String alias) {
+        this.alias = alias;
     }
 
 
@@ -486,5 +489,19 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         return self;
     }
 
+    @Override
+    public Self having(boolean append, String condition) {
+        if (append) {
+            singleConditions.put(HAVING, condition);
+        }
+        return self;
+    }
 
+    @Override
+    public Self last(boolean append, String condition) {
+        if (append) {
+            singleConditions.put(LAST, condition);
+        }
+        return self;
+    }
 }

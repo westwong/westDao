@@ -1,4 +1,4 @@
-package com.k2future.westdao.core.wsql.tools;
+package com.k2future.westdao.core.wsql.unit;
 
 import java.io.Serializable;
 import java.util.function.Function;

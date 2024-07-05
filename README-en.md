@@ -52,7 +52,7 @@ WestDao retains the native attributes of JPA, allowing you to enjoy the convenie
 
 ```java
 private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
-    return West.<User>lambdaQuery()
+    return West.<User>queryJPQL()
             .eq(dto.isEq(), User::getId, 20L)
             .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())))
             .and(dto.isAnd(), (q -> q.eq(User::getId, 18L).or(q1 -> q1.eq(User::getName, dto.getName()))))
@@ -70,10 +70,10 @@ private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
             .isNotNull(dto.isWasNotNull(), User::getName)
             .inJPQL(dto.isInJpql(), User::getName, "select nickName from UserInfo where id = 1");
 }
-@RequestMapping("/bd/user/update")
+@RequestMapping("/v1/user/update")
 public Result<Object> updateToPrams(WestUser user) {
     int num = user.update(
-            West.lambdaUpdate(User.class).update(new User().setAge(10)).eq(User::getId, 20L)
+            West.updateJPQL(User.class).update(new User().setAge(10)).eq(User::getId, 20L)
     );
     return Result.successResult(num);
 }
@@ -121,7 +121,7 @@ Oh, and if you've read this far without following along, no problem. But if you'
 <dependency>
     <groupId>com.k2future</groupId>
     <artifactId>westdao-core</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
 </dependency>
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -134,7 +134,7 @@ Oh, and if you've read this far without following along, no problem. But if you'
         <path>
             <groupId>io.github.westwong</groupId>
             <artifactId>westdao-core</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
         </path>
          <path>
               <groupId>org.projectlombok</groupId>

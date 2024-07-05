@@ -1,8 +1,8 @@
 package com.k2future.westdao.core.wsql.builder;
 
 import com.k2future.westdao.core.wsql.condition.AbstactCondition;
-import com.k2future.westdao.core.wsql.tools.LambdaUtils;
-import com.k2future.westdao.core.wsql.tools.WFunction;
+import com.k2future.westdao.core.utils.LambdaUtils;
+import com.k2future.westdao.core.wsql.unit.WFunction;
 import com.k2future.westdao.core.wsql.unit.JpqlQuery;
 import com.k2future.westdao.core.wsql.unit.KV;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
      * clazz
      *
      * @param entity 实体
-     * @param clazz 类
+     * @param clazz  类
      */
     public AbstractLambdaCondition(Entity entity, Class<Entity> clazz) {
         super(entity, clazz);
@@ -274,6 +274,12 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
                 sb.append(" GROUP BY ").append(groupColumns);
             }
         }
+
+        if (singleConditions.get(HAVING) != null) {
+            String condition = (String) singleConditions.get(HAVING);
+            sb.append(" HAVING ").append(condition);
+        }
+
         if (singleConditions.get(ORDER_BY) != null) {
             KV<String, List<WFunction<Entity, ?>>> orderByValue = (KV<String, List<WFunction<Entity, ?>>>) singleConditions.get(ORDER_BY);
             String key = orderByValue.getKey();
@@ -287,6 +293,10 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
                     sb.append(" DESC");
                 }
             }
+        }
+        if (singleConditions.get(LAST) != null) {
+            String last = (String) singleConditions.get(LAST);
+            sb.append(" ").append(last);
         }
 
     }
