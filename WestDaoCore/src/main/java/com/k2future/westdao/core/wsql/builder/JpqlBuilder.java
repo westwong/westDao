@@ -16,6 +16,7 @@ public interface JpqlBuilder<Entity> {
      * @return JPQL query string
      */
     JpqlQuery jpql();
+
     /**
      * 合并 新的实体 和 实体
      * Merge the new entity with entity.
@@ -23,5 +24,17 @@ public interface JpqlBuilder<Entity> {
      * @param newEntity new entity
      */
     void mergeEntity(Entity newEntity);
+    /**
+     * 获取实体别名
+     *
+     * @return 实体别名
+     */
+    String getEntityAlias();
 
+    /**
+     * 获取实体名称
+     *
+     * @return 实体名称
+     */
+    String getEntityName();
 }

@@ -65,6 +65,6 @@ public final class Constants {
     public static final List<String> COLUMN_AND_VALUE_METHODS = Arrays.asList(EQ, NE, GT, GE, LT, LE, LIKE, LIKE_LEFT, LIKE_RIGHT, NOT_LIKE, INJPQL, IN, NOT_IN);
     public static final List<String> COLUMN_AND_2VALUE_METHODS = Arrays.asList(BETWEEN, NOT_BETWEEN);
     public static final List<String> SINGLE_COLUMN_METHODS = Arrays.asList(IS_NULL, IS_NOT_NULL);
-    public static final List<String> BUILDER_METHODS = Arrays.asList(AND, OR);
+    public static final List<String> CONNECTION_METHODS = Arrays.asList(AND, OR);
 
 }

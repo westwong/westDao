@@ -50,4 +50,46 @@ public interface ConditionConnect<Self> extends Serializable {
      */
     Self or(boolean append, Consumer<Self> consumer);
 
+    /**
+     * AND + condition
+     * String 方式添加条件
+     *
+     * @param append    是否增加
+     * @param condition 条件
+     * @return 返回类型自身，用于链式调用
+     */
+    Self and(boolean append, String condition);
+
+    /**
+     * AND + condition
+     * String 方式添加条件
+     *
+     * @param condition 条件
+     * @return 返回类型自身，用于链式调用
+     */
+    default Self and(String condition) {
+        return and(true, condition);
+    }
+
+    /**
+     * or + condition
+     * String 方式添加条件
+     *
+     * @param append    是否增加
+     * @param condition 条件
+     * @return 返回类型自身，用于链式调用
+     */
+    Self or(boolean append, String condition);
+
+    /**
+     * or + condition
+     * String 方式添加条件
+     *
+     * @param condition 条件
+     * @return 返回类型自身，用于链式调用
+     */
+    default Self or(String condition) {
+        return and(true, condition);
+    }
+
 }

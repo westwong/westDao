@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
@@ -172,6 +175,7 @@ public class WestUserController {
         Map<String, Object> count = getJPQL(dto).select("count(1) as total").getMap();
         Map<String, Object> map = getJPQL(dto).getMap();
         List<Map<String, Object>> maps = getJPQL(dto).listMap();
+
         User entity = getJPQL(dto).getEntity();
         List<User> users = getJPQL(dto).listEntity();
         Map<String, Object> result = new HashMap<>(4);
@@ -201,6 +205,4 @@ public class WestUserController {
 
         return Result.successResult(execute);
     }
-
-
 }

@@ -1,10 +1,10 @@
 package com.k2future.westdao.core.wsql.builder;
 
-import com.k2future.westdao.core.wsql.condition.AbstactCondition;
 import com.k2future.westdao.core.utils.LambdaUtils;
-import com.k2future.westdao.core.wsql.unit.WFunction;
+import com.k2future.westdao.core.wsql.condition.AbstactCondition;
 import com.k2future.westdao.core.wsql.unit.JpqlQuery;
 import com.k2future.westdao.core.wsql.unit.KV;
+import com.k2future.westdao.core.wsql.unit.WFunction;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
@@ -58,9 +58,43 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
     protected String whereJpql() {
         StringBuilder whereJpqlBuilder = new StringBuilder();
         if (parent) {
-            whereJpqlBuilder.append(WHERE).append(" (1=1) ");
+            // 保证where关键字只有一个 且 有效
+            whereJpqlBuilder.append(SPACE).append(WHERE).append(" (1=1) ");
         }
         // 处理实体参数
+        String whereCondition = this.whereCondition();
+        return whereJpqlBuilder.append(whereCondition).toString();
+
+    }
+
+    /**
+     * 转换子类jpql
+     * 转换参数名 和 参数table
+     *
+     * @param jpql       jpql 子类jpql
+     * @param parameters 参数
+     * @return
+     */
+    private String parseChildJpql(String jpql, Map<String, Object> parameters) {
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            // 原来参数对象值
+            String originKey = entry.getKey();
+            Object value = entry.getValue();
+            // 为了保证参数唯一性
+            String uniqueKey = generateUniqueParamName(originKey);
+            jpqlParameters.put(uniqueKey, value);
+            jpql = jpql.replace(originKey, uniqueKey);
+        }
+        return jpql;
+    }
+
+    /**
+     * 生成查询条件语句 where 后面的 条件语句
+     *
+     * @return 查询条件语句
+     */
+    private String whereCondition() {
+        StringBuilder whereJpqlBuilder = new StringBuilder();
         if (entityParameters != null) {
             for (Map.Entry<String, Object> entry : entityParameters.entrySet()) {
                 String key = entry.getKey();
@@ -82,7 +116,7 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
                 this.columnAnd2ValueOperation(whereJpqlBuilder, condition);
             } else if (SINGLE_COLUMN_METHODS.contains(operation)) {
                 this.singleColumnOperation(whereJpqlBuilder, condition);
-            } else if (BUILDER_METHODS.contains(operation)) {
+            } else if (CONNECTION_METHODS.contains(operation)) {
                 this.builderOperation(whereJpqlBuilder, condition);
             } else {
                 throw new RuntimeException(operation + "not support");
@@ -93,7 +127,6 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
             this.singleConditionsOperation(whereJpqlBuilder);
         }
         return whereJpqlBuilder.toString();
-
     }
 
 
@@ -233,19 +266,27 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
      */
     private void builderOperation(StringBuilder sb, KV<String, Object> condition) {
         String operation = condition.getKey();
-        Self builder = (Self) condition.getValue();
+        Object conditionValue = condition.getValue();
+        if (conditionValue == null) {
+            return;
+        }
+        if (conditionValue instanceof String) {
+            switch (operation) {
+                case AND:
+                    sb.append(" AND ");
+                    break;
+                case OR:
+                    sb.append(" OR ");
+                    break;
+            }
+            sb.append(conditionValue);
+            return;
+        }
+        Self builder = (Self) conditionValue;
         JpqlQuery jpql = builder.jpql();
         String jpqlString = jpql.getJpql();
         Map<String, Object> parameters = jpql.getParameters();
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            // 原来参数对象值
-            String originKey = entry.getKey();
-            Object value = entry.getValue();
-            // 为了保证参数唯一性
-            String uniqueKey = generateUniqueParamName(originKey);
-            jpqlParameters.put(uniqueKey, value);
-            jpqlString = jpqlString.replace(originKey, uniqueKey);
-        }
+        jpqlString = parseChildJpql(jpqlString, parameters);
         jpqlString = StringUtils.removeStart(jpqlString, " AND ");
         switch (operation) {
             case AND:

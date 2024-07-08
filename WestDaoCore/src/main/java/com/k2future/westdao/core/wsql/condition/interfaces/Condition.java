@@ -16,7 +16,12 @@ import java.util.Collection;
  * @since 2024/6/25
  */
 public interface Condition<Self, R> extends Serializable {
-
+    /**
+     * 设置别名
+     *
+     * @param alias 别名
+     */
+    Self setEntityAlias(String alias);
     /**
      * 添加等于条件
      *
@@ -144,8 +149,8 @@ public interface Condition<Self, R> extends Serializable {
 
     /**
      * @param column 字段
-     * @param val1    值1
-     * @param val2    值2
+     * @param val1   值1
+     * @param val2   值2
      * @return 返回类型自身，用于链式调用
      */
     default Self between(R column, Object val1, Object val2) {
@@ -165,8 +170,8 @@ public interface Condition<Self, R> extends Serializable {
 
     /**
      * @param column 字段
-     * @param val1    值1
-     * @param val2    值2
+     * @param val1   值1
+     * @param val2   值2
      * @return 返回类型自身，用于链式调用
      */
     default Self notBetween(R column, Object val1, Object val2) {
@@ -183,6 +188,7 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self like(boolean append, R column, Object val);
+
     /**
      * 添加 LIKE 条件
      * like %name%
@@ -228,6 +234,7 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self likeLeft(boolean append, R column, Object val);
+
     /**
      * 添加左 LIKE 条件
      * like %name
@@ -314,11 +321,12 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self inJPQL(boolean append, R colum, String jpql);
+
     /**
      * 添加 IN 条件 jpql
      *
-     * @param colum  字段
-     * @param jpql   jpql语句
+     * @param colum 字段
+     * @param jpql  jpql语句
      * @return 返回类型自身，用于链式调用
      */
     default Self inJPQL(R colum, String jpql) {
@@ -352,6 +360,7 @@ public interface Condition<Self, R> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     Self isNotNull(boolean append, R column);
+
     /**
      * 添加 IS NOT NULL 条件
      *

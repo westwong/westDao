@@ -32,7 +32,7 @@ public class User {
 
     private Integer age;
 
-    @Column()
+    @Column
     private LocalDateTime createTime;
 
     @PrePersist

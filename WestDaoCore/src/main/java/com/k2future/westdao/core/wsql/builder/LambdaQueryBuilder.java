@@ -144,7 +144,7 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
     }
 
     @Override
-    public final String operationJpql() {
+    protected final String operationJpql() {
         return selectJpql();
     }
 }

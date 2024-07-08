@@ -2,7 +2,7 @@ package com.k2future.westdao.core.wsql.condition;
 
 import com.k2future.westdao.core.utils.BeanUtils;
 import com.k2future.westdao.core.utils.EntityUtils;
-import com.k2future.westdao.core.wsql.builder.AbstractBuilder;
+import com.k2future.westdao.core.wsql.builder.AbstractJpqlBuilder;
 import com.k2future.westdao.core.wsql.condition.interfaces.Condition;
 import com.k2future.westdao.core.wsql.condition.interfaces.ConditionConnect;
 import com.k2future.westdao.core.wsql.condition.interfaces.Grouping;
@@ -21,7 +21,7 @@ import static com.k2future.westdao.core.wsql.condition.Constants.*;
  * @author west
  * @since 2024/6/25
  */
-public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Entity, Self, R>, R> extends AbstractBuilder<Entity> implements Condition<Self, R>, ConditionConnect<Self>,
+public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Entity, Self, R>, R> extends AbstractJpqlBuilder<Entity> implements Condition<Self, R>, ConditionConnect<Self>,
         Grouping<Self, R>, Ordering<Self, R> {
 
 
@@ -47,10 +47,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      * jpqlParameters
      */
     protected Map<String, Object> jpqlParameters = null;
-    /**
-     * jpqlQuery
-     */
-    private JpqlQuery jpqlQuery = null;
 
     /**
      * ColumnSet
@@ -126,8 +122,10 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         if (parent) {
             jpql = operation + SPACE + jpql;
         }
-        jpqlQuery = new JpqlQuery(jpql, jpqlParameters);
-        return jpqlQuery;
+        /**
+         * jpqlQuery
+         */
+        return new JpqlQuery(jpql, jpqlParameters);
     }
 
     protected void init() {
@@ -251,6 +249,9 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      * @return clazz
      */
     protected Class<Entity> getClazz() {
+        if (clazz == null) {
+            intClazz();
+        }
         // 当没有条件生效时 初始化也没有传 clazz 和 entity 将无法执行
         // 暂时不想在 其他地方取值
         Assert.notNull(clazz, "no condition is valid, clazz is null, please set clazz or entity");
@@ -262,7 +263,8 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      *
      * @return 实体名称
      */
-    protected String getEntityName() {
+    @Override
+    public String getEntityName() {
         return getClazz().getSimpleName();
     }
 
@@ -271,17 +273,15 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      *
      * @return 实体别名
      */
-    protected String getEntityAlias() {
+    @Override
+    public String getEntityAlias() {
         return alias;
     }
 
-    /**
-     * 设置别名
-     *
-     * @param alias 别名
-     */
-    protected void setEntityAlias(String alias) {
+    @Override
+    public Self setEntityAlias(String alias) {
         this.alias = alias;
+        return self;
     }
 
 
@@ -450,11 +450,27 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     }
 
     @Override
+    public Self and(boolean append, String condition) {
+        if (append) {
+            conditions.add(new KV<>(AND, condition));
+        }
+        return self;
+    }
+
+    @Override
     public Self or(boolean append, Consumer<Self> consumer) {
         if (append) {
             Self instance = getChild();
             consumer.accept(instance);
             conditions.add(new KV<>(OR, instance));
+        }
+        return self;
+    }
+
+    @Override
+    public Self or(boolean append, String condition) {
+        if (append) {
+            conditions.add(new KV<>(OR, condition));
         }
         return self;
     }
