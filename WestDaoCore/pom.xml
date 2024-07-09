@@ -7,7 +7,7 @@
     <version>1.2.5</version>
     <name>westdao-core</name>
     <description>WestDaoCore</description>
-    <url/>
+    <url>https://github.com/westwong/westDao</url>
     <licenses>
         <license>
             <name>Apache License 2.0</name>
