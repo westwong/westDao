@@ -63,7 +63,14 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
         }
         // 处理实体参数
         String whereCondition = this.whereCondition();
-        return whereJpqlBuilder.append(whereCondition).toString();
+        whereJpqlBuilder.append(whereCondition);
+
+        // 处理唯一条件 groupBy orderBy last having 之类
+        if (!singleConditions.isEmpty()) {
+            this.singleConditionsOperation(whereJpqlBuilder);
+        }
+
+        return whereJpqlBuilder.toString();
 
     }
 
@@ -121,10 +128,6 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
             } else {
                 throw new RuntimeException(operation + "not support");
             }
-        }
-        // 处理唯一条件 groupBy orderBy
-        if (singleConditions != null) {
-            this.singleConditionsOperation(whereJpqlBuilder);
         }
         return whereJpqlBuilder.toString();
     }
@@ -322,16 +325,26 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
         }
 
         if (singleConditions.get(ORDER_BY) != null) {
-            KV<String, List<WFunction<Entity, ?>>> orderByValue = (KV<String, List<WFunction<Entity, ?>>>) singleConditions.get(ORDER_BY);
-            String key = orderByValue.getKey();
-            List<WFunction<Entity, ?>> columns = orderByValue.getValue();
-            if (columns != null && !columns.isEmpty()) {
-                String orderColumns = columns.stream().map(this::parseColumnToStringName)
-                        .map(name -> getEntityAlias() + "." + name)
-                        .collect(Collectors.joining(", "));
-                sb.append(" ORDER BY ").append(orderColumns);
-                if (DESC.equals(key)) {
-                    sb.append(" DESC");
+            List<KV<String, List<WFunction<Entity, ?>>>> orderByList = (List<KV<String, List<WFunction<Entity, ?>>>>) singleConditions.get(ORDER_BY);
+            sb.append(" ORDER BY ");
+            for (int i = 0; i < orderByList.size(); i++) {
+                KV<String, List<WFunction<Entity, ?>>> orderByValue = orderByList.get(i);
+                String key = orderByValue.getKey();
+                List<WFunction<Entity, ?>> columns = orderByValue.getValue();
+                if (columns != null && !columns.isEmpty()) {
+                    String orderColumns = columns.stream().map(this::parseColumnToStringName)
+                            .map(name -> getEntityAlias() + "." + name)
+                            .collect(Collectors.joining(", "));
+                    sb.append(orderColumns);
+                    if (DESC.equals(key)) {
+                        sb.append(" DESC ");
+                    } else {
+                        sb.append(" ASC ");
+                    }
+                    // 如果不是最后一个
+                    if (i < orderByList.size() - 1) {
+                        sb.append(", ");
+                    }
                 }
             }
         }

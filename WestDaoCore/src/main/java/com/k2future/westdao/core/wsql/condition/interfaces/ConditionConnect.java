@@ -32,7 +32,11 @@ public interface ConditionConnect<Self> extends Serializable {
     Self and(boolean append, Consumer<Self> consumer);
 
     /**
+     * ！！！
      * or 条件连接  or ()
+     * 因为JPA 框架，or () 在执行过程中，会把 or ()的()去掉
+     * Connecting OR conditions with parentheses.
+     * Due to the JPA framework, parentheses around OR conditions are removed during execution.
      *
      * @param consumer 提供条件链接构造器
      * @return 返回类型自身，用于链式调用
@@ -42,7 +46,11 @@ public interface ConditionConnect<Self> extends Serializable {
     }
 
     /**
+     * ！！！
      * or 条件连接  or ()
+     * 因为JPA 框架，or () 在执行过程中，会把 or ()的()去掉
+     * Connecting OR conditions with parentheses.
+     * Due to the JPA framework, parentheses around OR conditions are removed during execution.
      *
      * @param append   是否写入
      * @param consumer 提供条件链接构造器

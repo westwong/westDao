@@ -23,6 +23,7 @@ public interface Ordering<Self, R> extends Serializable {
      * @param columns    排序字段或列
      * @return 返回类型自身，用于链式调用
      */
+    @SuppressWarnings("unchecked")
     default Self orderByAsc(R... columns) {
         return orderByAsc(true, columns);
     }
@@ -34,6 +35,7 @@ public interface Ordering<Self, R> extends Serializable {
      * @param columns    排序字段或列
      * @return 返回类型自身，用于链式调用
      */
+    @SuppressWarnings("unchecked")
     Self orderByAsc(boolean append, R... columns);
 
     /**
@@ -42,6 +44,7 @@ public interface Ordering<Self, R> extends Serializable {
      * @param columns    排序字段或列
      * @return 返回类型自身，用于链式调用
      */
+    @SuppressWarnings("unchecked")
     default Self orderByDesc(R... columns) {
         return orderByDesc(true, columns);
     }
@@ -53,5 +56,6 @@ public interface Ordering<Self, R> extends Serializable {
      * @param columns    排序字段或列
      * @return 返回类型自身，用于链式调用
      */
+    @SuppressWarnings("unchecked")
     Self orderByDesc(boolean append, R... columns);
 }

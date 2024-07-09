@@ -3,6 +3,7 @@ package com.k2future.westdao.test.entity;
 import com.k2future.westdao.core.annotations.WestDao;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class User {
     private Integer age;
 
     @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @PrePersist

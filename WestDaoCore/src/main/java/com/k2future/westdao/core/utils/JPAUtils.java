@@ -29,15 +29,10 @@ public class JPAUtils {
         String jpql = jpqlQuery.getJpql();
 
         Map<String, Object> parameters = jpqlQuery.getParameters();
-
         Query query = entityManager.createQuery(jpql);
-
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
-
-        return query;
+        return putParamToQuery(query, parameters, jpqlQuery.getLimit());
     }
+
 
     /**
      * Creates a JPA TupleQuery from the given JpqlQuery and EntityManager.
@@ -52,11 +47,24 @@ public class JPAUtils {
         Map<String, Object> parameters = jpqlQuery.getParameters();
 
         Query query = entityManager.createQuery(jpql, Tuple.class);
+        return putParamToQuery(query, parameters, jpqlQuery.getLimit());
+    }
 
+    /**
+     * 给 Query 设置参数
+     *
+     * @param query      Query
+     * @param parameters 参数
+     * @param limit      限制
+     * @return Query
+     */
+    private static Query putParamToQuery(Query query, Map<String, Object> parameters, int limit) {
+        if (limit > 0) {
+            query.setMaxResults(limit);
+        }
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             query.setParameter(entry.getKey(), entry.getValue());
         }
-
         return query;
     }
 

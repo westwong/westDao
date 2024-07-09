@@ -63,21 +63,21 @@ public interface Grouping<Self, R> extends Serializable {
     Self having(boolean append, String condition);
 
     /**
-     * 在JPQL 最后增加条件 一般用于 limit
+     *  limitNum
      *
-     * @param condition 条件
+     * @param limitNum 条件
      * @return 返回类型自身，用于链式调用
      */
-    default Self last(String condition) {
-        return having(true, condition);
+    default Self limit(int limitNum) {
+        return limit(true, limitNum);
     }
 
     /**
-     * 在JPQL 最后增加条件 一般用于 limit
+     * limit
      *
      * @param append    是否写入
-     * @param condition 要添加到查询构建器的 HAVING 条件字符串。
+     * @param limitNum 要添加到查询构建器的 HAVING 条件字符串。
      * @return 返回类型自身，用于链式调用
      */
-    Self last(boolean append, String condition);
+    Self limit(boolean append, int limitNum);
 }

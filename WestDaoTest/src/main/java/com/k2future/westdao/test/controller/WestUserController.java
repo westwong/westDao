@@ -116,7 +116,7 @@ public class WestUserController {
     }
 
     @RequestMapping("/v1/user/findAll")
-    public Result<Object> findALLByBd(TestDto dto) {
+    public Result<Object> findALLV1(TestDto dto) {
         WestUser dao = West.dao(WestUser.class);
         List<User> all = dao.findAll(
                 getJPQL(dto)
@@ -125,7 +125,7 @@ public class WestUserController {
     }
 
     @RequestMapping("/v1/user/findOne")
-    public Result<Object> findOneByBd(TestDto dto) {
+    public Result<Object> findOneByV1(TestDto dto) {
         User one = West.dao(WestUser.class).findOne(
                 getJPQL(dto)
         );
@@ -133,7 +133,7 @@ public class WestUserController {
     }
 
     @RequestMapping("/v1/user/page")
-    public Result<Object> pageByBd(TestDto dto) {
+    public Result<Object> pageByV1(TestDto dto) {
         Page<User> page = West.dao(WestUser.class).page(PageRequest.of(dto.getPageNum(), dto.getPageSize()),
                 getJPQL(dto)
         );
@@ -171,8 +171,9 @@ public class WestUserController {
     }
 
     @RequestMapping("/v2/user/findAll")
-    public Result<Object> findALLByBdV2(TestDto dto) {
+    public Result<Object> findALLV2(TestDto dto) {
         Map<String, Object> count = getJPQL(dto).select("count(1) as total").getMap();
+        Map<String, Object> sum = getJPQL(dto).select("sum(age) as total").getMap();
         Map<String, Object> map = getJPQL(dto).getMap();
         List<Map<String, Object>> maps = getJPQL(dto).listMap();
 
@@ -180,6 +181,7 @@ public class WestUserController {
         List<User> users = getJPQL(dto).listEntity();
         Map<String, Object> result = new HashMap<>(4);
         result.put("count", count);
+        result.put("sum", sum);
         result.put("map", map);
         result.put("maps", maps);
         result.put("entity", entity);
@@ -200,9 +202,28 @@ public class WestUserController {
     @RequestMapping("/v2/user/deleteAll")
     @Transactional
     public Result<Object> deleteAllV2(User user) {
-
         int execute = West.deleteJPQL(user).execute();
-
+        int execute1 = West.<User>deleteJPQL().execute();
         return Result.successResult(execute);
+    }
+    // 对group limit orderBY的支持
+    @RequestMapping("/v2/user/list")
+    public Result<Object> listV2() {
+        List<User> orderBY = West.<User>queryJPQL()
+                .orderByDesc(User::getAge)
+                .orderByAsc(User::getId)
+                .limit(10)
+                .listEntity();
+        List<Map<String, Object>> group = West.<User>queryJPQL()
+                // age 不给别名就会默认为 'colnum0'
+                .select("age as age, count(1) as num")
+                .groupBy(User::getAge)
+                .having("age > 10")
+                .orderByAsc(User::getAge)
+                .listMap();
+        Map<String, Object> result = new HashMap<>(4);
+        result.put("orderBY", orderBY);
+        result.put("group", group);
+        return Result.successResult(result);
     }
 }

@@ -1,7 +1,6 @@
 package com.k2future.westdao.core.wsql.executor;
 
 import com.k2future.westdao.core.utils.JPAUtils;
-import com.k2future.westdao.core.wsql.builder.LambdaQueryBuilder;
 import com.k2future.westdao.core.wsql.builder.LambdaUpdateBuilder;
 import com.k2future.westdao.core.wsql.executor.interfaces.WestUpdate;
 import com.k2future.westdao.core.wsql.unit.JpqlQuery;
@@ -9,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**

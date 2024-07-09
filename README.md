@@ -50,27 +50,28 @@ public class WestUserController {
 完整的保留JPA的原生属性，你在享受JPA无表管理的方便之余，也能感受到如MyBatis-plus般的链式代码，强大JPQL让你对平台兼容性再无后顾之忧
 
 ```java
-private static LambdaQueryBuilder<User> getBuilder(TestDto dto) {
-    return West.<User>queryJPQL()
-            .eq(dto.isEq(), User::getId, 20L)
-            .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())
-            ))
-            .and(dto.isAnd(), (q -> q.eq(User::getId, 18L).or(q1 -> q1.eq(User::getName, dto.getName()))
-            ))
-            .ne(dto.isNe(), User::getAge, 79)
-            .le(dto.isLe(), User::getAge, 20)
-            .ge(dto.isGe(), User::getAge, 80)
-            .between(dto.isBetween(), User::getAge, 20, 80)
-            .notBetween(dto.isNotBetween(), User::getAge, 20, 80)
-            .like(dto.isLike(), User::getName, "ru")
-            .likeLeft(dto.isLikeLeft(), User::getName, "ac")
-            .likeRight(dto.isLikeRight(), User::getName, "da")
-            .in(dto.isIn(), User::getAge, Arrays.asList(20, 21, 22))
-            .notIn(dto.isNotIn(), User::getAge, Arrays.asList(20, 21, 22))
-            .isNull(dto.isWasNull(), User::getName)
-            .isNotNull(dto.isWasNotNull(), User::getName)
-            .inJPQL(dto.isInJpql(), User::getName, "select nickName from UserInfo where id = 1");
-}
+ private static LambdaQuery<User> getJPQL(TestDto dto) {
+        return West.<User>queryJPQL()
+                .eq(dto.isEq(), User::getId, 20L)
+            	// 对于or调用专门说一下，因为JPA原始框架的原因 JPQL or()的括号会被省去，调试时注意
+                .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())
+                ))
+                .and(dto.isAnd(), (q -> q.eq(User::getId, 18L).or(q1 -> q1.eq(User::getName, dto.getName()))
+                ))
+                .ne(dto.isNe(), User::getAge, 79)
+                .le(dto.isLe(), User::getAge, 20)
+                .ge(dto.isGe(), User::getAge, 80)
+                .between(dto.isBetween(), User::getAge, 20, 80)
+                .notBetween(dto.isNotBetween(), User::getAge, 20, 80)
+                .like(dto.isLike(), User::getName, "ru")
+                .likeLeft(dto.isLikeLeft(), User::getName, "ac")
+                .likeRight(dto.isLikeRight(), User::getName, "da")
+                .in(dto.isIn(), User::getAge, Arrays.asList(20, 21, 22))
+                .notIn(dto.isNotIn(), User::getAge, Arrays.asList(20, 21, 22))
+                .isNull(dto.isWasNull(), User::getName)
+                .isNotNull(dto.isWasNotNull(), User::getName)
+                .inJPQL(dto.isInJpql(), User::getName, "select nickName from UserInfo where id = 1");
+    }
 ```
 
 ```
@@ -83,9 +84,77 @@ public Result<Object> updateToPrams(WestUser user) {
 }
 ```
 
-总之一个思想，对象自己处理自己，自己给自己提供一切持久层方法，你不用关心如何调用（**Wise Exection**），
+总之一个思想，对象自己处理自己，自己给自己提供一切持久层方法，你不用关心如何调用（**Wise Exection**）
 
-只管写（**Simple Tools**)。
+只管写（**Simple Tools**)
+
+当然我同样也对链式调用赋于DAO能力
+
+```java
+@RequestMapping("/v2/user/update")
+@Transactional
+public Result<Object> updateToPramsV2(User user) {
+    int execute = West.updateJPQL(user).eq(User::getId, 20L).execute();
+    return Result.successResult(execute);
+}
+@RequestMapping("/v2/user/findAll")
+public Result<Object> findALLV2(TestDto dto) {
+    Map<String, Object> count = getJPQL(dto).select("count(1) as total").getMap();
+    Map<String, Object> sum = getJPQL(dto).select("sum(age) as total").getMap();
+    Map<String, Object> map = getJPQL(dto).getMap();
+    List<Map<String, Object>> maps = getJPQL(dto).listMap();
+
+    User entity = getJPQL(dto).getEntity();
+    List<User> users = getJPQL(dto).listEntity();
+    Map<String, Object> result = new HashMap<>(4);
+    result.put("count", count);
+    result.put("sum", sum);
+    result.put("map", map);
+    result.put("maps", maps);
+    result.put("entity", entity);
+    result.put("users", users);
+    return Result.successResult(result);
+}
+
+@RequestMapping("/v2/user/page")
+public Result<Object> pageV2(TestDto dto) {
+    Page<User> pageUser = getJPQL(dto).pageEntity(PageRequest.of(dto.getPageNum(), dto.getPageSize()));
+    Page<Map<String, Object>> pageMap = getJPQL(dto).pageMap(PageRequest.of(dto.getPageNum(), dto.getPageSize()));
+    Map<String, Object> result = new HashMap<>(4);
+    result.put("map", pageMap);
+    result.put("users", pageUser);
+    return Result.successResult(result);
+}
+
+@RequestMapping("/v2/user/deleteAll")
+@Transactional
+public Result<Object> deleteAllV2(User user) {
+    int execute = West.deleteJPQL(user).execute();
+    int execute1 = West.<User>deleteJPQL().execute();
+    return Result.successResult(execute);
+}
+
+// 对group limit orderBY的支持
+@RequestMapping("/v2/user/list")
+public Result<Object> listV2() {
+    List<User> orderBY = West.<User>queryJPQL()
+            .orderByDesc(User::getAge)
+            .orderByAsc(User::getId)
+            .limit(10)
+            .listEntity();
+    List<Map<String, Object>> group = West.<User>queryJPQL()
+         // age 不给别名就会默认为 'colnum0'
+            .select("age as age, count(1) as num")
+            .groupBy(User::getAge)
+            .having("age > 10")
+            .orderByAsc(User::getAge)
+            .listMap();
+    Map<String, Object> result = new HashMap<>(4);
+    result.put("orderBY", orderBY);
+    result.put("group", group);
+    return Result.successResult(result);
+}
+```
 
 我相信项目做得多的朋友，看到这里已经能知道优势了，什么service，什么dao，什么Respositroy ？我们通通暂时不管，一个Controller 能解决的事情，不要搞的那么麻烦。简单的数据有简单的处理办法，对于一些复杂多表逻辑你才有创建service的必要，毕竟省出来的时间是你的
 
@@ -107,7 +176,8 @@ public class User {
     @Column(columnDefinition = "text")
     private String avatar;
     private Integer age;
-    @Column()
+    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
     @PrePersist
     public void prePersistCreateTime() {
@@ -121,13 +191,14 @@ public class User {
 是的，就只需要一个＠ＷestDao(prefix = "west")，当然"west"也可以是你喜欢的任何字符串，比如 love、me、you、like
 
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
+根据版本引入<westdao.version>1.2.5</westdao.version>
 
 ```xml
 
 <dependency>
     <groupId>com.k2future</groupId>
     <artifactId>westdao-core</artifactId>
-    <version>1.2.5</version>
+    <version>${westdao.version}</version>
 </dependency>
 <plugin>
 <groupId>org.apache.maven.plugins</groupId>
@@ -140,7 +211,7 @@ public class User {
         <path>
             <groupId>io.github.westwong</groupId>
             <artifactId>westdao-core</artifactId>
-            <version>1.2.5</version>
+            <version>${westdao.version}</version>
         </path>
          <path>
               <groupId>org.projectlombok</groupId>

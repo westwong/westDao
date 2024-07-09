@@ -1,5 +1,6 @@
 package com.k2future.westdao.core.wsql.condition;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.k2future.westdao.core.utils.BeanUtils;
 import com.k2future.westdao.core.utils.EntityUtils;
 import com.k2future.westdao.core.wsql.builder.AbstractJpqlBuilder;
@@ -38,7 +39,13 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      * singleConditions
      * 那些不能重复的条件比如说group by  order BY
      */
-    protected Map<String, Object> singleConditions = null;
+    protected Map<String, Object> singleConditions = new HashMap<>(3);
+    /**
+     * limitNum
+     * 限制数量
+     */
+    protected int limitNum = 0;
+
     /**
      * 把实体对象转化为参数
      */
@@ -125,7 +132,7 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         /**
          * jpqlQuery
          */
-        return new JpqlQuery(jpql, jpqlParameters);
+        return new JpqlQuery(jpql, jpqlParameters, limitNum);
     }
 
     protected void init() {
@@ -490,7 +497,8 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     public final Self orderByAsc(boolean append, R... columns) {
         addColumn(columns);
         if (append) {
-            singleConditions.put(ORDER_BY, new KV<>(ASC, Arrays.asList(columns)));
+            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY, k -> new ArrayList<>(5));
+            list.add(new KV<>(ASC, Arrays.asList(columns)));
         }
         return self;
     }
@@ -500,7 +508,8 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     public final Self orderByDesc(boolean append, R... columns) {
         addColumn(columns);
         if (append) {
-            singleConditions.put(ORDER_BY, new KV<>(DESC, Arrays.asList(columns)));
+            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY, k -> new ArrayList<>(5));
+            list.add(new KV<>(DESC, Arrays.asList(columns)));
         }
         return self;
     }
@@ -514,9 +523,9 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     }
 
     @Override
-    public Self last(boolean append, String condition) {
+    public Self limit(boolean append, int limitNum) {
         if (append) {
-            singleConditions.put(LAST, condition);
+            this.limitNum = limitNum;
         }
         return self;
     }

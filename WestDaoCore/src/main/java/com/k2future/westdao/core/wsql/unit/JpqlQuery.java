@@ -15,5 +15,6 @@ public class JpqlQuery {
 
     private String jpql;
     private Map<String, Object> parameters;
+    private int limit;
 
 }
