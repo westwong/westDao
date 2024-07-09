@@ -20,8 +20,10 @@ public interface Condition<Self, R> extends Serializable {
      * 设置别名
      *
      * @param alias 别名
+     * @return 返回类型自身，用于链式调用
      */
     Self setEntityAlias(String alias);
+
     /**
      * 添加等于条件
      *
