@@ -34,6 +34,13 @@ public Result<Object> findById(WestUser user) {
     return Result.successResult(user);
 }
 
+@RequestMapping("/v3/user/find")
+public Result<Object> findByIdV3(User user) {
+    Assert.notNull(user.getId(), "id is required");
+    User db = new WestUser(user).findById();
+    return Result.successResult(db);
+}
+
 @PostMapping("/user/update")
 public Result<Object> updateById(WestUser user) {
     Assert.notNull(user.getId(), "id is required");
@@ -191,7 +198,7 @@ Oh, if you're reading this, and it doesn't matter, but if you follow along and h
 
 ```xml
 <dependency>
-    <groupId>com.k2future</groupId>
+    <groupId>cn.k2future</groupId>
     <artifactId>westdao-core</artifactId>
     <version>${westdao.version}</version>
 </dependency>
@@ -204,7 +211,7 @@ Oh, if you're reading this, and it doesn't matter, but if you follow along and h
         <target>1.8</target>
         <annotationProcessorPaths>
             <path>
-                <groupId>io.github.westwong</groupId>
+                <groupId>cn.k2future</groupId>
                 <artifactId>westdao-core</artifactId>
                 <version>${westdao.version}</version>
             </path>

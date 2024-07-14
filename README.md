@@ -32,13 +32,18 @@ public class WestUserController {
         User User = user.findById();
         return Result.successResult(User);
     }
+	@RequestMapping("/v3/user/find")
+	public Result<Object> findByIdV3(User user) {
+    	Assert.notNull(user.getId(), "id is required");
+    	User db = new WestUser(user).findById();
+    	return Result.successResult(db);
+	}	
     @PostMapping("/user/update")
     public Result<Object> updateById(WestUser user) {
         Assert.notNull(user.getId(), "id is required");
         user.updateById();
         return Result.successResult();
     }
-}
 ```
 
 同理，删、查、改也不会掉链子
@@ -191,12 +196,12 @@ public class User {
 是的，就只需要一个＠ＷestDao(prefix = "west")，当然"west"也可以是你喜欢的任何字符串，比如 love、me、you、like
 
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
-根据版本引入<westdao.version>1.2.5</westdao.version>
+根据版本引入<westdao.version>1.2.6</westdao.version>
 
 ```xml
 
 <dependency>
-    <groupId>com.k2future</groupId>
+    <groupId>cn.k2future</groupId>
     <artifactId>westdao-core</artifactId>
     <version>${westdao.version}</version>
 </dependency>
@@ -209,7 +214,7 @@ public class User {
     <target>1.8</target>
     <annotationProcessorPaths>
         <path>
-            <groupId>io.github.westwong</groupId>
+            <groupId>cn.k2future</groupId>
             <artifactId>westdao-core</artifactId>
             <version>${westdao.version}</version>
         </path>
