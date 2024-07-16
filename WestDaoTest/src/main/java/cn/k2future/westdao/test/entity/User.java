@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,7 +17,9 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @WestDao
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * auto

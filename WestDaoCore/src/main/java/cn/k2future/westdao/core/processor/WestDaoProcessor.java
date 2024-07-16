@@ -81,6 +81,11 @@ public class WestDaoProcessor extends AbstractProcessor {
         for (Element enclosedElement : typeElement.getEnclosedElements()) {
             if (enclosedElement instanceof VariableElement) {
                 VariableElement field = (VariableElement) enclosedElement;
+                Set<Modifier> modifiers = field.getModifiers();
+                // 跳过 static 和 final 字段
+                if (modifiers.contains(Modifier.STATIC) || modifiers.contains(Modifier.FINAL)) {
+                    continue;
+                }
                 String fieldName = field.getSimpleName().toString();
                 TypeName fieldType = TypeName.get(field.asType());
                 String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
@@ -112,6 +117,11 @@ public class WestDaoProcessor extends AbstractProcessor {
         for (Element enclosedElement : typeElement.getEnclosedElements()) {
             if (enclosedElement instanceof VariableElement) {
                 VariableElement field = (VariableElement) enclosedElement;
+                Set<Modifier> modifiers = field.getModifiers();
+                // 跳过 static 和 final 字段
+                if (modifiers.contains(Modifier.STATIC) || modifiers.contains(Modifier.FINAL)) {
+                    continue;
+                }
                 TypeName fieldType = TypeName.get(field.asType());
                 String fieldName = field.getSimpleName().toString();
                 String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
@@ -292,6 +302,12 @@ public class WestDaoProcessor extends AbstractProcessor {
         for (Element enclosedElement : typeElement.getEnclosedElements()) {
             if (enclosedElement instanceof VariableElement) {
                 VariableElement field = (VariableElement) enclosedElement;
+
+                Set<Modifier> modifiers = field.getModifiers();
+                // 跳过 static 和 final 字段
+                if (modifiers.contains(Modifier.STATIC) || modifiers.contains(Modifier.FINAL)) {
+                    continue;
+                }
                 String fieldName = field.getSimpleName().toString();
                 String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
                 String setterMethodName = "set" + capitalizedFieldName;
