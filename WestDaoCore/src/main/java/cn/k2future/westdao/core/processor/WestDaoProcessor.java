@@ -1,8 +1,8 @@
 package cn.k2future.westdao.core.processor;
 
 import cn.k2future.westdao.core.annotations.WestDao;
-import com.google.auto.service.AutoService;
 import cn.k2future.westdao.core.handler.OperationManager;
+import com.google.auto.service.AutoService;
 import com.squareup.javapoet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,11 +13,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.util.Set;
 
 @SupportedAnnotationTypes("cn.k2future.westdao.core.annotations.WestDao")
@@ -312,14 +312,25 @@ public class WestDaoProcessor extends AbstractProcessor {
                 String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
                 String setterMethodName = "set" + capitalizedFieldName;
 
-                MethodSpec setterMethod = MethodSpec.methodBuilder(setterMethodName)
+                // 获取父类中对应的方法
+                TypeMirror parentReturnType = null;
+                for (Element e : typeElement.getEnclosedElements()) {
+                    if (e.getSimpleName().toString().equals(setterMethodName)) {
+                        parentReturnType = e.asType();
+                        break;
+                    }
+                }
+                MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(setterMethodName)
                         .addModifiers(Modifier.PUBLIC)
-                        .returns(childClassName)
+                        .addAnnotation(Override.class)
                         .addParameter(TypeName.get(field.asType()), fieldName)
-                        .addStatement("super." + setterMethodName + "(" + fieldName + ")")
-                        .addStatement("return this")
-                        .build();
-                builder.addMethod(setterMethod);
+                        .addStatement("super." + setterMethodName + "(" + fieldName + ")");
+                if (parentReturnType == null || !parentReturnType.toString().contains("void")) {
+                    methodBuilder.returns(childClassName)
+                            .addStatement("return this");
+
+                }
+                builder.addMethod(methodBuilder.build());
             }
         }
 

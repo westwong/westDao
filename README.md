@@ -167,6 +167,8 @@ public Result<Object> listV2() {
 
 赋予实体对象以上能力，其实也很简单，你只需在标注@Entity的实体类上，再增加一个@WestDao
 
+这里建议增加@Accessors(chain = true)，子类也将赋予链式调用能力
+
 ```java
 @Entity
 @Data
@@ -198,6 +200,8 @@ public class User {
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
 根据版本引入<westdao.version>1.2.6</westdao.version>
 
+在<annotationProcessorPaths> 中把westdao-core 写在lombok 后面，保证执行顺序
+
 ```xml
 
 <dependency>
@@ -212,17 +216,17 @@ public class User {
 <configuration>
     <source>1.8</source>
     <target>1.8</target>
-    <annotationProcessorPaths>
-        <path>
-            <groupId>cn.k2future</groupId>
-            <artifactId>westdao-core</artifactId>
-            <version>${westdao.version}</version>
-        </path>
+   
          <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
               <version>1.18.24</version>
          </path>
+         <path>
+            <groupId>cn.k2future</groupId>
+            <artifactId>westdao-core</artifactId>
+            <version>${westdao.version}</version>
+        </path>
     </annotationProcessorPaths>
 </configuration>
 </plugin>

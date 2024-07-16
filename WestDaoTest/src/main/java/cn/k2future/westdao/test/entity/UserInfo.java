@@ -12,7 +12,6 @@ import javax.persistence.*;
  */
 @Entity
 @Data
-@Accessors(chain = true)
 @WestDao
 public class UserInfo {
 

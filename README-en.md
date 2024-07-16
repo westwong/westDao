@@ -96,7 +96,7 @@ Just focus on writing (**Simple Tools**).
 Of course, I also empower DAO with chain calls:
 
 ```java
-scss复制代码@RequestMapping("/v2/user/update")
+@RequestMapping("/v2/user/update")
 @Transactional
 public Result<Object> updateToPramsV2(User user) {
     int execute = West.updateJPQL(user).eq(User::getId, 20L).execute();
@@ -167,6 +167,8 @@ For those experienced in project development, seeing this, you already know the 
 
 To empower entity objects with these capabilities is simple. Just add `@WestDao` alongside `@Entity` for entities annotated with `@Entity`.
 
+The recommendation is to add `@Accessors(chain = true)`, which will grant chain-call capability to subclasses as well.
+
 ```java
 @Entity
 @Data
@@ -195,6 +197,8 @@ public class User {
 Yes, just `@WestDao(prefix = "west")`. "west" can be any string you prefer, like "love", "me", "you", or "like".
 
 Oh, if you're reading this, and it doesn't matter, but if you follow along and haven't imported dependencies yet, you might curse because you haven't yet introduced the dependency according to the version. Introduce `<westdao.version>1.2.5</westdao.version>` based on the version.
+
+In `<annotationProcessorPaths>`, place `westdao-core` after ` lombok` to ensure the execution order.
 
 ```xml
 <dependency>

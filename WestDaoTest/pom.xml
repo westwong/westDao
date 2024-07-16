@@ -125,11 +125,6 @@
                     <target>1.8</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>cn.k2future</groupId>
-                            <artifactId>westdao-core</artifactId>
-                            <version>${westdao.version}</version>
-                        </path>
-                        <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>1.5.5.Final</version>
@@ -143,6 +138,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>0.2.0</version>
+                        </path>
+                        <path>
+                            <groupId>cn.k2future</groupId>
+                            <artifactId>westdao-core</artifactId>
+                            <version>${westdao.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
