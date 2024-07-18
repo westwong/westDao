@@ -99,7 +99,8 @@ public class WestDaoProcessor extends AbstractProcessor {
 
         FieldSpec entityManager = FieldSpec.builder(OperationManager.class, "operationManager", Modifier.PRIVATE, Modifier.STATIC)
                 .build();
-        MethodSpec setOperationManager = MethodSpec.methodBuilder("setOperationManager")
+
+        MethodSpec autowireConstructor = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Autowired.class)
                 .addStatement(newClassName + ".operationManager = operationManager")
@@ -257,10 +258,10 @@ public class WestDaoProcessor extends AbstractProcessor {
 
         // add fields and methods to
         builder
+                .addField(entityManager)
                 .addMethod(noArgsConstructor)
                 .addMethod(parentConstructor)
-                .addField(entityManager)
-                .addMethod(setOperationManager)
+                .addMethod(autowireConstructor)
                 .addMethod(parseParentMethod)
                 .addMethod(saveMethod)
                 .addMethod(deleteByMethod)
