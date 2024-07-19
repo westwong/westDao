@@ -196,7 +196,8 @@ public class User {
 
 Yes, just `@WestDao(prefix = "west")`. "west" can be any string you prefer, like "love", "me", "you", or "like".
 
-Oh, if you're reading this, and it doesn't matter, but if you follow along and haven't imported dependencies yet, you might curse because you haven't yet introduced the dependency according to the version. Introduce `<westdao.version>1.2.5</westdao.version>` based on the version.
+Oh, if you're reading this, and it doesn't matter, but if you follow along and haven't imported dependencies yet, you might curse because you haven't yet introduced the dependency according to the version.
+Import according to the version `<westdao.version>latest</westdao.version>`. For details, please see the releases.
 
 In `<annotationProcessorPaths>`, place `westdao-core` after ` lombok` to ensure the execution order.
 

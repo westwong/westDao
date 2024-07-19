@@ -198,7 +198,7 @@ public class User {
 是的，就只需要一个＠ＷestDao(prefix = "west")，当然"west"也可以是你喜欢的任何字符串，比如 love、me、you、like
 
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
-根据版本引入<westdao.version>1.2.6</westdao.version>
+根据版本引入<westdao.version>latest</westdao.version> 详情请看 releases
 
 在<annotationProcessorPaths> 中把westdao-core 写在lombok 后面，保证执行顺序
 
