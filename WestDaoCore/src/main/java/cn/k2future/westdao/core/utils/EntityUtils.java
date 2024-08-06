@@ -1,6 +1,7 @@
 package cn.k2future.westdao.core.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +64,11 @@ public class EntityUtils {
         Field[] fields = entity.getClass().getDeclaredFields();
 
         for (Field field : fields) {
+            // Skip static and final fields
+            if (Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers())) {
+                continue;
+            }
+
             field.setAccessible(true);
             try {
                 String propertyName = field.getName();
