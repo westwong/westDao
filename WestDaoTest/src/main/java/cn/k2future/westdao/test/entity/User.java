@@ -1,13 +1,12 @@
 package cn.k2future.westdao.test.entity;
 
 import cn.k2future.westdao.core.annotations.WestDao;
+import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author west

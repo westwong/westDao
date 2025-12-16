@@ -1,10 +1,9 @@
 package cn.k2future.westdao.test.entity;
 
 import cn.k2future.westdao.core.annotations.WestDao;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import javax.persistence.*;
 
 /**
  * @author west

@@ -1,27 +1,27 @@
 package cn.k2future.westdao.core.utils;
 
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-import javax.persistence.TupleElement;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TupleElement;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Utility class for JPA related operations.
- * Provides a method to create a JPA Query from a JpqlQuery and an EntityManager.
+ * Provides a method to create a JPA Query from a JpqlQuery and an
+ * EntityManager.
  *
  * @since 2024/7/5
  */
 public class JPAUtils {
 
-
     /**
      * Creates a JPA Query from the given JpqlQuery and EntityManager.
      *
-     * @param jpqlQuery     the JpqlQuery object containing the JPQL string and its parameters
+     * @param jpqlQuery     the JpqlQuery object containing the JPQL string and its
+     *                      parameters
      * @param entityManager the EntityManager to create the query
      * @return the created Query
      */
@@ -33,11 +33,11 @@ public class JPAUtils {
         return putParamToQuery(query, parameters, jpqlQuery.getLimit());
     }
 
-
     /**
      * Creates a JPA TupleQuery from the given JpqlQuery and EntityManager.
      *
-     * @param jpqlQuery     the JpqlQuery object containing the JPQL string and its parameters
+     * @param jpqlQuery     the JpqlQuery object containing the JPQL string and its
+     *                      parameters
      * @param entityManager the EntityManager to create the query
      * @return the created Query
      */
@@ -68,13 +68,15 @@ public class JPAUtils {
         return query;
     }
 
-
     /**
-     * Converts a JPA {@link Tuple} object to a {@link Map} of String keys and Object values.
-     * Each entry in the map corresponds to a tuple element's alias and its associated value.
+     * Converts a JPA {@link Tuple} object to a {@link Map} of String keys and
+     * Object values.
+     * Each entry in the map corresponds to a tuple element's alias and its
+     * associated value.
      *
      * @param tuple The JPA Tuple object representing a row of query results.
-     * @return A Map where keys are tuple element aliases and values are their respective values.
+     * @return A Map where keys are tuple element aliases and values are their
+     *         respective values.
      */
     public static Map<String, Object> tupleToMap(Tuple tuple) {
         Map<String, Object> map = new HashMap<>();
@@ -96,6 +98,5 @@ public class JPAUtils {
         }
         return map;
     }
-
 
 }

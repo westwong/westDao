@@ -10,19 +10,19 @@ import cn.k2future.westdao.core.wsql.condition.interfaces.Select;
 import cn.k2future.westdao.core.wsql.condition.interfaces.Update;
 import cn.k2future.westdao.core.wsql.executor.LambdaQuery;
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -108,7 +108,8 @@ public class OperationManager extends OperationBase implements OperationalDao {
 
         query.select(root).where(predicates);
 
-        List<T> resultList = entityManager.createQuery(query).setFirstResult((int) page.getOffset()).setMaxResults(page.getPageSize()).getResultList();
+        List<T> resultList = entityManager.createQuery(query).setFirstResult((int) page.getOffset())
+                .setMaxResults(page.getPageSize()).getResultList();
         long count = this.count(entity);
         return new PageImpl<>(resultList, page, count);
     }
@@ -141,7 +142,6 @@ public class OperationManager extends OperationBase implements OperationalDao {
         return JPAUtils.getQuery(jpqlQuery, entityManager);
     }
 
-
     @Override
     @Transactional
     public <T> int deleteAll(T t, JpqlBuilder<T> builder) {
@@ -149,7 +149,6 @@ public class OperationManager extends OperationBase implements OperationalDao {
         Query query = getQuery(t, builder);
         return query.executeUpdate();
     }
-
 
     @Override
     @Transactional

@@ -4,19 +4,18 @@ import cn.k2future.westdao.core.utils.JPAUtils;
 import cn.k2future.westdao.core.wsql.executor.interfaces.WestQuery;
 import cn.k2future.westdao.core.wsql.builder.LambdaQueryBuilder;
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.Tuple;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.Tuple;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * LambdaQuery 类，实现了 Query 接口。
@@ -50,7 +49,6 @@ public class LambdaQuery<T> extends LambdaQueryBuilder<T, LambdaQuery<T>> implem
         staticEntityManager = entityManager;
     }
 
-
     @Override
     protected LambdaQuery<T> instance() {
         return new LambdaQuery<>();
@@ -75,7 +73,6 @@ public class LambdaQuery<T> extends LambdaQueryBuilder<T, LambdaQuery<T>> implem
         JpqlQuery jpqlQuery = super.jpql();
         return JPAUtils.getTupleQuery(jpqlQuery, staticEntityManager);
     }
-
 
     @Override
     public T getEntity() {

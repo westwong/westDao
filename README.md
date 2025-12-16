@@ -1,10 +1,10 @@
-# Wise Exectution  Simple Tools
+# Wise Exectution Simple Tools
 
 ## [WestDao](https://github.com/westwong/westDao)
 
 [English](https://github.com/westwong/westDao/blob/master/README-en.md)
 
-欢迎来到 WestDao！这个项目旨在 用更少的代码完成日常开发工作，直接给出DEMO
+欢迎来到 WestDao！这个项目旨在 用更少的代码完成日常开发工作，直接给出 DEMO
 
 ```java
 @RestController
@@ -37,7 +37,7 @@ public class WestUserController {
     	Assert.notNull(user.getId(), "id is required");
     	User db = new WestUser(user).findById();
     	return Result.successResult(db);
-	}	
+	}
     @PostMapping("/user/update")
     public Result<Object> updateById(WestUser user) {
         Assert.notNull(user.getId(), "id is required");
@@ -52,7 +52,7 @@ public class WestUserController {
 
 [westDao](https://github.com/westwong/westDao/tree/master/WestDaoCore)是基于[Spring Data JPA](https://spring.io/projects/spring-data-jpa)完成的持久层框架，并且借鉴了[MyBatis-plus](https://baomidou.com/) 的代码风格，能够动态的生成[JPQL](https://docs.oracle.com/cd/E29542_01/apirefs.1111/e13946/ejb3_langref.html)，
 
-完整的保留JPA的原生属性，你在享受JPA无表管理的方便之余，也能感受到如MyBatis-plus般的链式代码，强大JPQL让你对平台兼容性再无后顾之忧
+完整的保留 JPA 的原生属性，你在享受 JPA 无表管理的方便之余，也能感受到如 MyBatis-plus 般的链式代码，强大 JPQL 让你对平台兼容性再无后顾之忧
 
 ```java
  private static LambdaQuery<User> getJPQL(TestDto dto) {
@@ -93,7 +93,7 @@ public Result<Object> updateToPrams(WestUser user) {
 
 只管写（**Simple Tools**)
 
-当然我同样也对链式调用赋于DAO能力
+当然我同样也对链式调用赋于 DAO 能力
 
 ```java
 @RequestMapping("/v2/user/update")
@@ -161,11 +161,11 @@ public Result<Object> listV2() {
 }
 ```
 
-我相信项目做得多的朋友，看到这里已经能知道优势了，什么service，什么dao，什么Respositroy ？我们通通暂时不管，一个Controller 能解决的事情，不要搞的那么麻烦。简单的数据有简单的处理办法，对于一些复杂多表逻辑你才有创建service的必要，毕竟省出来的时间是你的
+我相信项目做得多的朋友，看到这里已经能知道优势了，什么 service，什么 dao，什么 Respositroy ？我们通通暂时不管，一个 Controller 能解决的事情，不要搞的那么麻烦。简单的数据有简单的处理办法，对于一些复杂多表逻辑你才有创建 service 的必要，毕竟省出来的时间是你的
 
 ### 开始
 
-赋予实体对象以上能力，其实也很简单，你只需在标注@Entity的实体类上，再增加一个@WestDao
+赋予实体对象以上能力，其实也很简单，你只需在标注@Entity 的实体类上，再增加一个@WestDao
 
 这里建议增加@Accessors(chain = true)，子类也将赋予链式调用能力
 
@@ -195,12 +195,12 @@ public class User {
 }
 ```
 
-是的，就只需要一个＠ＷestDao(prefix = "west")，当然"west"也可以是你喜欢的任何字符串，比如 love、me、you、like
+是的，就只需要一个＠Ｗ estDao(prefix = "west")，当然"west"也可以是你喜欢的任何字符串，比如 love、me、you、like
 
 哦，对了，你如果是看到这里，无所谓的，但是如果你跟着做，你要骂人了，因为你还没有引入依赖
 根据版本引入<westdao.version>latest</westdao.version> 详情请看 releases
 
-在<annotationProcessorPaths> 中把westdao-core 写在lombok 后面，保证执行顺序
+在<annotationProcessorPaths> 中把 westdao-core 写在 lombok 后面，保证执行顺序
 
 ```xml
 
@@ -216,7 +216,7 @@ public class User {
 <configuration>
     <source>1.8</source>
     <target>1.8</target>
-   
+
          <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
@@ -234,7 +234,7 @@ public class User {
 
 我们还需要先编译一下，编译就是用 mvn compile
 
-这样@Entity的 target 的同级目录下，就会生成以 prefix + entity 名字class 文件，接参是它，保存是它，修改是他，删除也是它，用好它吧
+这样@Entity 的 target 的同级目录下，就会生成以 prefix + entity 名字 class 文件，接参是它，保存是它，修改是他，删除也是它，用好它吧
 
 ```java
 public class WestUser extends User implements WestDao<User>
@@ -242,14 +242,18 @@ public class LikeUser extends User implements WestDao<User>
 public class MyUser extends User implements WestDao<User>
 ```
 
-当前支持版本:  spring boot 2.X 、jdk 1.8
-严谨起见，我测试通过的是：2.3.12.RELEASE 
+当前支持版本：
+
+- **1.x 版本**：基于 **Spring Boot 2.x**，要求 **JDK 1.8**
+- **2.x 版本**：基于 **Spring Boot 3.x**，要求 **JDK 17**
+
+严谨起见，1.x 我测试通过的是：Spring Boot 2.3.12.RELEASE,2.x 我测试通过的是：Spring Boot 3.2.7.RELEASE
 
 如果你是新手？完整的 [pom ](https://github.com/westwong/westDao/blob/master/WestDaoTest/pom.xml)文件你先看看？
-还是不懂？那再看看  [testDemo](https://github.com/westwong/westDao/tree/master/WestDaoTest) 
-还有疑问？给我发邮件吧 deadshoot@foxmail.com 
+还是不懂？那再看看 [testDemo](https://github.com/westwong/westDao/tree/master/WestDaoTest)
+还有疑问？给我发邮件吧 deadshoot@foxmail.com
 
-最后欢迎各位大佬 提交  [Issue](https://github.com/westwong/westDao/issues) 和 [Pull request](https://github.com/westwong/westDao/pulls)
+最后欢迎各位大佬 提交 [Issue](https://github.com/westwong/westDao/issues) 和 [Pull request](https://github.com/westwong/westDao/pulls)
 
 你有什么好的想法想跟我交流的微信：deadshoot
 

@@ -8,21 +8,20 @@ import cn.k2future.westdao.test.entity.UserInfo;
 import cn.k2future.westdao.test.entity.WestUser;
 import cn.k2future.westdao.test.entity.WestUserInfo;
 import cn.k2future.westdao.test.utils.resp.Result;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * West UserController
@@ -34,7 +33,6 @@ import java.util.Map;
 @RequestMapping("/west")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WestUserController {
-
 
     @PostMapping("/user/save")
     public Result<Object> saveUser(@RequestBody WestUser user) {
@@ -59,6 +57,7 @@ public class WestUserController {
         User User = user.findById();
         return Result.successResult(User);
     }
+
     @RequestMapping("/user/findAll")
     public Result<Object> findAll(WestUser user) {
         List<User> all = user.findAll();
@@ -100,17 +99,14 @@ public class WestUserController {
     public Result<Object> deleteAll(WestUser user) {
 
         int num = user.deleteAll(
-                West.deleteJPQL(User.class).eq(User::getName, "west").or(q -> q.isNull(User::getAge))
-        );
+                West.deleteJPQL(User.class).eq(User::getName, "west").or(q -> q.isNull(User::getAge)));
         return Result.successResult(num);
     }
-
 
     @RequestMapping("/v1/user/update")
     public Result<Object> updateToPrams(WestUser user) {
         int num = user.update(
-                West.updateJPQL(User.class).update(new User().setAge(10)).set(User::getAge, 10).eq(User::getId, 20L)
-        );
+                West.updateJPQL(User.class).update(new User().setAge(10)).set(User::getAge, 10).eq(User::getId, 20L));
         return Result.successResult(num);
     }
 
@@ -118,34 +114,29 @@ public class WestUserController {
     public Result<Object> findALLV1(TestDto dto) {
         WestUser dao = West.dao(WestUser.class);
         List<User> all = dao.findAll(
-                getJPQL(dto)
-        );
+                getJPQL(dto));
         return Result.successResult(all);
     }
 
     @RequestMapping("/v1/user/findOne")
     public Result<Object> findOneByV1(TestDto dto) {
         User one = West.dao(WestUser.class).findOne(
-                getJPQL(dto)
-        );
+                getJPQL(dto));
         return Result.successResult(one);
     }
 
     @RequestMapping("/v1/user/page")
     public Result<Object> pageByV1(TestDto dto) {
         Page<User> page = West.dao(WestUser.class).page(PageRequest.of(dto.getPageNum(), dto.getPageSize()),
-                getJPQL(dto)
-        );
+                getJPQL(dto));
         return Result.successResult(page);
     }
 
     private static LambdaQuery<User> getJPQL(TestDto dto) {
         return West.<User>queryJPQL()
                 .eq(dto.isEq(), User::getId, 20L)
-                .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())
-                ))
-                .and(dto.isAnd(), (q -> q.eq(User::getId, 18L).or(q1 -> q1.eq(User::getName, dto.getName()))
-                ))
+                .or(dto.isOr(), (q -> q.eq(User::getId, 18L).eq(User::getName, dto.getName())))
+                .and(dto.isAnd(), (q -> q.eq(User::getId, 18L).or(q1 -> q1.eq(User::getName, dto.getName()))))
                 .ne(dto.isNe(), User::getAge, 79)
                 .le(dto.isLe(), User::getAge, 20)
                 .ge(dto.isGe(), User::getAge, 80)
@@ -160,7 +151,6 @@ public class WestUserController {
                 .isNotNull(dto.isWasNotNull(), User::getName)
                 .inJPQL(dto.isInJpql(), User::getName, "select nickName from UserInfo where id = 1");
     }
-
 
     @RequestMapping("/v2/user/update")
     @Transactional
@@ -205,6 +195,7 @@ public class WestUserController {
         int execute1 = West.<User>deleteJPQL().execute();
         return Result.successResult(execute);
     }
+
     // 对group limit orderBY的支持
     @RequestMapping("/v2/user/list")
     public Result<Object> listV2() {

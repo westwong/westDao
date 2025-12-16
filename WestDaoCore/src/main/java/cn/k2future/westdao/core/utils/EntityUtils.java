@@ -22,7 +22,7 @@ public class EntityUtils {
         // 获取实体类的主键字段
         Field idField = null;
         for (Field field : clazz.getDeclaredFields()) {
-            if (field.isAnnotationPresent(javax.persistence.Id.class)) {
+            if (field.isAnnotationPresent(jakarta.persistence.Id.class)) {
                 idField = field;
                 break;
             }
@@ -53,7 +53,8 @@ public class EntityUtils {
     }
 
     /**
-     * Parse the entity to get a map of property names and their corresponding values
+     * Parse the entity to get a map of property names and their corresponding
+     * values
      *
      * @param entity The entity to parse
      * @param <T>    The type of the entity

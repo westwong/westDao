@@ -238,7 +238,12 @@ public class LikeUser extends User implements WestDao<User>
 public class MyUser extends User implements WestDao<User>
 ```
 
-Current supported versions: Spring Boot 2.X, JDK 1.8. For strictness, I tested with: 2.3.12.RELEASE.
+Current supported versions:
+
+- **1.x releases**: based on **Spring Boot 2.x**, requires **JDK 1.8**
+- **2.x releases**: based on **Spring Boot 3.x**, requires **JDK 17**
+
+For strictness, for 1.x I tested with: Spring Boot 2.3.12.RELEASE,2.x I tested with: Spring Boot 3.2.7.RELEASE.
 
 If you're a beginner? Check out the complete [pom](https://github.com/westwong/westDao/blob/master/WestDaoTest/pom.xml) file first? Still confused? Then check out the [testDemo](https://github.com/westwong/westDao/tree/master/WestDaoTest) again. Still have questions? Send me an email at deadshoot@foxmail.com.
 
@@ -247,9 +252,5 @@ Finally, welcome all experts to submit [Issue](https://github.com/westwong/westD
 Got any great ideas to discuss with me? WeChat: deadshoot.
 
 To reiterate our goal: **Wise Execution, Simple Tools**.
-
-
-
-
 
 3.5

@@ -4,12 +4,11 @@ import cn.k2future.westdao.core.utils.JPAUtils;
 import cn.k2future.westdao.core.wsql.builder.LambdaDeleteBuilder;
 import cn.k2future.westdao.core.wsql.executor.interfaces.WestDelete;
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 /**
  * delete
@@ -57,7 +56,6 @@ public class LambdaDelete<T> extends LambdaDeleteBuilder<T, LambdaDelete<T>> imp
         JpqlQuery jpqlQuery = super.jpql();
         return JPAUtils.getQuery(jpqlQuery, staticEntityManager);
     }
-
 
     @Override
     public int execute() {

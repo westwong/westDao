@@ -4,12 +4,11 @@ import cn.k2future.westdao.core.utils.JPAUtils;
 import cn.k2future.westdao.core.wsql.builder.LambdaUpdateBuilder;
 import cn.k2future.westdao.core.wsql.executor.interfaces.WestUpdate;
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 /**
  * LambdaQuery 类，实现了 Query 接口。
@@ -21,7 +20,6 @@ import javax.persistence.Query;
 @Component
 @Slf4j
 public class LambdaUpdate<T> extends LambdaUpdateBuilder<T, LambdaUpdate<T>> implements WestUpdate {
-
 
     private static final long serialVersionUID = -114L;
 
@@ -53,7 +51,6 @@ public class LambdaUpdate<T> extends LambdaUpdateBuilder<T, LambdaUpdate<T>> imp
     protected LambdaUpdate<T> instance() {
         return new LambdaUpdate<>();
     }
-
 
     /**
      * 生成 qeury
