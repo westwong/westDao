@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.k2future</groupId>
     <artifactId>westdao-core</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <name>westdao-core</name>
     <description>WestDaoCore</description>
     <url>https://github.com/westwong/westDao</url>
