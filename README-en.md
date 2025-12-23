@@ -240,8 +240,8 @@ public class MyUser extends User implements WestDao<User>
 
 Current supported versions:
 
-- **1.x releases**: based on **Spring Boot 2.x**, requires **JDK 1.8**
-- **2.x releases**: based on **Spring Boot 3.x**, requires **JDK 17**
+- **1.x releases**: based on **Spring Boot 2.x**, requires **JDK 1.8 latest 1.2.9**
+- **2.x releases**: based on **Spring Boot 3.x**, requires **JDK 17 latest 2.0.2**
 
 For strictness, for 1.x I tested with: Spring Boot 2.3.12.RELEASE,2.x I tested with: Spring Boot 3.2.7.RELEASE.
 

@@ -244,8 +244,8 @@ public class MyUser extends User implements WestDao<User>
 
 当前支持版本：
 
-- **1.x 版本**：基于 **Spring Boot 2.x**，要求 **JDK 1.8**
-- **2.x 版本**：基于 **Spring Boot 3.x**，要求 **JDK 17**
+- **1.x 版本**：基于 **Spring Boot 2.x**，要求 **JDK 1.8 最新版本 1.2.9**
+- **2.x 版本**：基于 **Spring Boot 3.x**，要求 **JDK 17  最新版本 2.0.2**
 
 严谨起见，1.x 我测试通过的是：Spring Boot 2.3.12.RELEASE,2.x 我测试通过的是：Spring Boot 3.2.7.RELEASE
 
