@@ -84,8 +84,8 @@ public final class West {
      * @param <T>   实体类的类型
      * @return 一个新的 LambdaQuery 实例
      */
-    public static <T> LambdaUpdate<T> queryJPQL(Class<T> clazz) {
-        return new LambdaUpdate<>(clazz);
+    public static <T> LambdaQuery<T> queryJPQL(Class<T> clazz) {
+        return new LambdaQuery<>(clazz);
     }
 
     /**
