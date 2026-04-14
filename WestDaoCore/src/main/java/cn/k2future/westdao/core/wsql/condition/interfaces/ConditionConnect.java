@@ -97,7 +97,7 @@ public interface ConditionConnect<Self> extends Serializable {
      * @return 返回类型自身，用于链式调用
      */
     default Self or(String condition) {
-        return and(true, condition);
+        return or(true, condition);
     }
 
 }

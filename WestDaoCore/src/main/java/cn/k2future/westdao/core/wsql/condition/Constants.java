@@ -19,7 +19,7 @@ public final class Constants {
     public static final String RIGHT_BRACKET = ")";
 
 
-    public static final String EQ = "qe";
+    public static final String EQ = "EQ";
     public static final String NE = "NE";
     public static final String GT = "GT";
     public static final String GE = "GE";
@@ -50,6 +50,7 @@ public final class Constants {
     public static final String SELECT = "SELECT";
     public static final String SELECT_DISTINCT = "SELECT_DISTINCT";
     public static final String SELECT_COUNT = "SELECT_COUNT";
+    public static final String SELECT_COUNT_DISTINCT = "SELECT_COUNT_DISTINCT";
     public static final String SELECT_String = "SELECT_String";
     public static final String DISTINCT = "DISTINCT";
     public static final String COUNT = "COUNT";

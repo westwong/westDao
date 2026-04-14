@@ -7,10 +7,14 @@ import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Tuple;
+import cn.k2future.westdao.core.wsql.unit.WFunction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -85,27 +89,78 @@ public class LambdaQuery<T> extends LambdaQueryBuilder<T, LambdaQuery<T>> implem
         if (size > 1) {
             log.warn("find {} result, return first one", size);
         }
-        return (T) resultList.get(0);
+        Object result = resultList.get(0);
+        return mapToEntity(result);
     }
 
     @Override
     public List<T> listEntity() {
         Query query = this.getQuery();
-        return query.getResultList();
+        List resultList = query.getResultList();
+        return (List<T>) resultList.stream()
+                .map(this::mapToEntity)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 将查询结果映射为实体对象
+     *
+     * @param result 查询结果（可能是实体，也可能是 Object[] 或单列对象）
+     * @return 实体对象
+     */
+    private T mapToEntity(Object result) {
+        if (result == null) {
+            return null;
+        }
+
+        Class<T> clazz = getClazz();
+        // 1. 如果结果已经是实体的实例（全量查询结果），直接返回
+        if (clazz.isInstance(result)) {
+            return (T) result;
+        }
+
+        // 2. 如果结果是投影查询（部分字段），则进行手动填充
+        try {
+            List<WFunction<T, ?>> selectColumns = getSelectColumns();
+            // 如果用户指定了查询列，但返回的结果不是实体（JPA 投影），则创建实体并填充
+            if (selectColumns != null && !selectColumns.isEmpty()) {
+                T entity = clazz.getDeclaredConstructor().newInstance();
+                BeanWrapper beanWrapper = new BeanWrapperImpl(entity);
+
+                if (selectColumns.size() == 1) {
+                    // 单列投影：result 就是该列的值
+                    String propertyName = parseColumnToStringName(selectColumns.get(0));
+                    beanWrapper.setPropertyValue(propertyName, result);
+                } else if (result instanceof Object[] values) {
+                    // 多列投影：result 是 Object[]
+                    for (int i = 0; i < selectColumns.size(); i++) {
+                        String propertyName = parseColumnToStringName(selectColumns.get(i));
+                        beanWrapper.setPropertyValue(propertyName, values[i]);
+                    }
+                }
+                return entity;
+            }
+        } catch (Exception e) {
+            log.error("mapToEntity transform error, result class: {}", result.getClass().getName(), e);
+        }
+
+        // 3. 兜底处理：如果不匹配也解析不了，尝试强转（可能会报错，但保留了原始异常路径）
+        return (T) result;
     }
 
     @Override
     public Page<T> pageEntity(Pageable page) {
         Query query = this.getQuery()
                 .setFirstResult((int) page.getOffset()).setMaxResults(page.getPageSize());
-        List<T> resultList = query.getResultList();
+        List resultList = query.getResultList();
+        List<T> collect = (List<T>) resultList.stream().map(this::mapToEntity).collect(Collectors.toList());
         long count = this.count();
-        return new PageImpl<>(resultList, page, count);
+        return new PageImpl<>(collect, page, count);
     }
 
     @Override
     public long count() {
-        super.selectCount();
+        this.forceSelectCount();
         Query query = this.getQuery();
         return (long) query.getSingleResult();
     }

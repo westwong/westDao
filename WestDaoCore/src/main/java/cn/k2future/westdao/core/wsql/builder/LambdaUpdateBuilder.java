@@ -56,6 +56,11 @@ public abstract class LambdaUpdateBuilder<Entity, Self extends AbstractLambdaCon
         return self;
     }
 
+    @Override
+    protected boolean skipOrderBy() {
+        return true;
+    }
+
 
     @Override
     public final String updateJpql() {

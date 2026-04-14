@@ -21,6 +21,10 @@ public abstract class LambdaDeleteBuilder<Entity, Self extends AbstractLambdaCon
     public LambdaDeleteBuilder() {
         super();
     }
+    @Override
+    protected boolean skipOrderBy() {
+        return true;
+    }
 
     @Override
     protected String operationJpql() {

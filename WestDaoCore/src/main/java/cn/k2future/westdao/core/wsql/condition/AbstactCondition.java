@@ -9,6 +9,7 @@ import cn.k2future.westdao.core.wsql.builder.AbstractJpqlBuilder;
 import cn.k2future.westdao.core.wsql.condition.interfaces.Grouping;
 import cn.k2future.westdao.core.wsql.unit.JpqlQuery;
 import cn.k2future.westdao.core.wsql.unit.KV;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -24,7 +25,6 @@ import static cn.k2future.westdao.core.wsql.condition.Constants.*;
 public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Entity, Self, R>, R> extends AbstractJpqlBuilder<Entity> implements Condition<Self, R>, ConditionConnect<Self>,
         Grouping<Self, R>, Ordering<Self, R> {
 
-
     /**
      * 参数计数器 为了防止属性重复
      * Parameter counter to prevent property duplication
@@ -36,9 +36,9 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
     protected List<KV<String, Object>> conditions = new ArrayList<>();
     /**
      * singleConditions
-     * 那些不能重复的条件比如说group by  order BY
+     * 那些不能重复的条件比如说group by order BY
      */
-    protected Map<String, Object> singleConditions = new HashMap<>(3);
+    protected Map<String, Object> singleConditions = new HashMap<>(4);
     /**
      * limitNum
      * 限制数量
@@ -141,6 +141,15 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         intClazz();
     }
 
+    /**
+     * 是否跳过 orderBy
+     *
+     * @return boolean
+     */
+    protected boolean skipOrderBy() {
+        return false;
+    }
+
     protected void intClazz() {
         if (clazz == null) {
             clazz = parseClassFromColumns();
@@ -194,7 +203,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         }
         columnSet.add(column);
     }
-
 
     /**
      * 获取唯一参数名称
@@ -254,7 +262,7 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
      *
      * @return clazz
      */
-    protected Class<Entity> getClazz() {
+    public Class<Entity> getClazz() {
         if (clazz == null) {
             intClazz();
         }
@@ -289,7 +297,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         this.alias = alias;
         return self;
     }
-
 
     @Override
     public Self eq(boolean append, R column, Object val) {
@@ -444,7 +451,6 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
         return self;
     }
 
-
     @Override
     public Self and(boolean append, Consumer<Self> consumer) {
         if (append) {
@@ -457,7 +463,7 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     @Override
     public Self and(boolean append, String condition) {
-        if (append) {
+        if (append && StringUtils.isNotBlank(condition)) {
             conditions.add(new KV<>(AND, condition));
         }
         return self;
@@ -475,7 +481,7 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     @Override
     public Self or(boolean append, String condition) {
-        if (append) {
+        if (append && StringUtils.isNotBlank(condition)) {
             conditions.add(new KV<>(OR, condition));
         }
         return self;
@@ -493,10 +499,12 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     @SafeVarargs
     @Override
+    @SuppressWarnings("unchecked")
     public final Self orderByAsc(boolean append, R... columns) {
         addColumn(columns);
         if (append) {
-            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY, k -> new ArrayList<>(5));
+            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY,
+                    k -> new ArrayList<>(5));
             list.add(new KV<>(ASC, Arrays.asList(columns)));
         }
         return self;
@@ -504,11 +512,20 @@ public abstract class AbstactCondition<Entity, Self extends AbstactCondition<Ent
 
     @SafeVarargs
     @Override
+    @SuppressWarnings("unchecked")
     public final Self orderByDesc(boolean append, R... columns) {
         addColumn(columns);
         if (append) {
-            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY, k -> new ArrayList<>(5));
+            List<KV<String, List<R>>> list = (List<KV<String, List<R>>>) singleConditions.computeIfAbsent(ORDER_BY,
+                    k -> new ArrayList<>(5));
             list.add(new KV<>(DESC, Arrays.asList(columns)));
+        }
+        return self;
+    }
+
+    public Self last(boolean append, String last) {
+        if (append) {
+            singleConditions.put(LAST, last);
         }
         return self;
     }

@@ -245,9 +245,9 @@ public class MyUser extends User implements WestDao<User>
 当前支持版本：
 
 - **1.x 版本**：基于 **Spring Boot 2.x**，要求 **JDK 1.8 最新版本 1.2.9**
-- **2.x 版本**：基于 **Spring Boot 3.x**，要求 **JDK 17  最新版本 2.0.2**
+- **2.x 版本**：基于 **Spring Boot 3.x**，要求 **JDK 17  最新版本 2.0.3**
 
-严谨起见，1.x 我测试通过的是：Spring Boot 2.3.12.RELEASE,2.x 我测试通过的是：Spring Boot 3.2.7.RELEASE
+严谨起见，1.x 我测试通过的是：Spring Boot 2.3.12.RELEASE, 2.x 我测试通过的是：Spring Boot 3.2.8.RELEASE
 
 如果你是新手？完整的 [pom ](https://github.com/westwong/westDao/blob/master/WestDaoTest/pom.xml)文件你先看看？
 还是不懂？那再看看 [testDemo](https://github.com/westwong/westDao/tree/master/WestDaoTest)

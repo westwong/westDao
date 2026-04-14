@@ -60,6 +60,14 @@ public interface Select<Self, R> extends Serializable {
     Self selectCount(R... columns);
 
     /**
+     * 指定要计算去重后的行数的列。
+     *
+     * @param columns 要计数的列
+     * @return 返回类型自身
+     */
+    Self selectCountDistinct(R... columns);
+
+    /**
      * 生成查询语句
      * generate query statement
      * @return 生成查询语句

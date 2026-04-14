@@ -20,7 +20,7 @@ public interface Ordering<Self, R> extends Serializable {
     /**
      * 是否按列升序排序
      *
-     * @param columns    排序字段或列
+     * @param columns 排序字段或列
      * @return 返回类型自身，用于链式调用
      */
     @SuppressWarnings("unchecked")
@@ -31,8 +31,8 @@ public interface Ordering<Self, R> extends Serializable {
     /**
      * 是否按列升序排序
      *
-     * @param append 是否写入
-     * @param columns    排序字段或列
+     * @param append  是否写入
+     * @param columns 排序字段或列
      * @return 返回类型自身，用于链式调用
      */
     @SuppressWarnings("unchecked")
@@ -41,7 +41,7 @@ public interface Ordering<Self, R> extends Serializable {
     /**
      * 是否按列降序
      *
-     * @param columns    排序字段或列
+     * @param columns 排序字段或列
      * @return 返回类型自身，用于链式调用
      */
     @SuppressWarnings("unchecked")
@@ -52,10 +52,73 @@ public interface Ordering<Self, R> extends Serializable {
     /**
      * 是否按列降序
      *
-     * @param append 是否写入
-     * @param columns    排序字段或列
+     * @param append  是否写入
+     * @param columns 排序字段或列
      * @return 返回类型自身，用于链式调用
      */
     @SuppressWarnings("unchecked")
     Self orderByDesc(boolean append, R... columns);
+
+    /**
+     * 单列升序
+     * 
+     * @param append 是否写入
+     * @param column 排序字段或列
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    default Self orderByAsc(boolean append, R column) {
+        return orderByAsc(append, (R[]) new Object[] { column });
+    }
+
+    /**
+     * 单列降序
+     * 
+     * @param append 是否写入
+     * @param column 排序字段或列
+     * @return 返回类型自身，用于链式调用
+     */
+    @SuppressWarnings("unchecked")
+    default Self orderByDesc(boolean append, R column) {
+        return orderByDesc(append, (R[]) new Object[] { column });
+    }
+
+    /**
+     * 单列升序
+     * 
+     * @param column 排序字段或列
+     * @return 返回类型自身，用于链式调用
+     */
+    default Self orderByAsc(R column) {
+        return orderByAsc(true, column);
+    }
+
+    /**
+     * 单列降序
+     * 
+     * @param column 排序字段或列
+     * @return 返回类型自身，用于链式调用
+     */
+    default Self orderByDesc(R column) {
+        return orderByDesc(true, column);
+    }
+
+    /**
+     * 最后一条语句
+     * 
+     * @param last 最后一条语句
+     * @return 返回类型自身，用于链式调用
+     */
+    default Self last(String last) {
+        return last(true, last);
+    }
+
+    /**
+     * 最后一条语句
+     * 
+     * @param last 最后一条语句
+     * @return 返回类型自身，用于链式调用
+     */
+    Self last(boolean append, String last);
+
 }

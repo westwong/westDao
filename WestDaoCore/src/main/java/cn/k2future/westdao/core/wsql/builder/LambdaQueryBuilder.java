@@ -23,11 +23,22 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
     /**
      * 查询结果字段
      */
-    private KV<String, ?> selectResult = null;
+    protected KV<String, ?> selectResult = null;
+
+
     /**
-     * 查询的个数
+     * 获取选中的列
+     * @return 列列表
      */
-    private Integer limit = null;
+    protected List<WFunction<Entity, ?>> getSelectColumns() {
+        if (selectResult != null && (Constants.SELECT.equals(selectResult.getKey()) || Constants.SELECT_DISTINCT.equals(selectResult.getKey()))) {
+            Object value = selectResult.getValue();
+            if (value instanceof List) {
+                return (List<WFunction<Entity, ?>>) value;
+            }
+        }
+        return null;
+    }
 
     public LambdaQueryBuilder(Entity entity, Class<Entity> clazz) {
         super(entity, clazz);
@@ -39,15 +50,14 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
 
     @Override
     public Integer getLimit() {
-        return limit;
+        return limitNum;
     }
 
     @Override
     public Self limit(Integer limit) {
-        this.limit = limit;
+        this.limitNum = limit != null ? limit : 0;
         return self;
     }
-
 
     @SafeVarargs
     @Override
@@ -79,6 +89,29 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
         return self;
     }
 
+    @SafeVarargs
+    @Override
+    public final Self selectCountDistinct(WFunction<Entity, ?>... columns) {
+        addColumn(columns);
+        if (selectResult == null) {
+            selectResult = new KV<>(Constants.SELECT_COUNT_DISTINCT, Arrays.asList(columns));
+        }
+        return self;
+    }
+
+    /**
+     * 强行设置为 select count
+     *
+     * @param columns columns
+     * @return Self
+     */
+    @SafeVarargs
+    public final Self forceSelectCount(WFunction<Entity, ?>... columns) {
+        addColumn(columns);
+        selectResult = new KV<>(Constants.SELECT_COUNT, Arrays.asList(columns));
+        return self;
+    }
+
     @Override
     public Self select(String columns) {
         if (selectResult == null) {
@@ -87,8 +120,8 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
         return self;
     }
 
-    private StringBuffer getSelectResultSql() {
-        StringBuffer sb = new StringBuffer();
+    private StringBuilder getSelectResultSql() {
+        StringBuilder sb = new StringBuilder();
         if (selectResult == null) {
             sb.append(getEntityAlias()).append(Constants.SPACE);
             return sb;
@@ -108,10 +141,10 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
 
         switch (key) {
             case Constants.SELECT:
-                if (StringUtils.isEmpty(columnsJpql)) {
-                    sb.append(getEntityAlias());
-                } else {
+                if (StringUtils.hasText(columnsJpql)) {
                     sb.append(columnsJpql);
+                } else {
+                    sb.append(getEntityAlias());
                 }
                 break;
             case Constants.SELECT_DISTINCT:
@@ -119,11 +152,15 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
                 sb.append(Constants.DISTINCT).append(Constants.SPACE).append("(").append(columnsJpql).append(")");
                 break;
             case Constants.SELECT_COUNT:
-                if (StringUtils.isEmpty(columnsJpql)) {
-                    sb.append("COUNT(1)");
-                } else {
+                if (StringUtils.hasText(columnsJpql)) {
                     sb.append("COUNT(").append(columnsJpql).append(")");
+                } else {
+                    sb.append("COUNT(*)");
                 }
+                break;
+            case Constants.SELECT_COUNT_DISTINCT:
+                Assert.hasText(columnsJpql, "Count distinct columns cannot be empty");
+                sb.append("COUNT(").append(Constants.DISTINCT).append(Constants.SPACE).append(columnsJpql).append(")");
                 break;
             default:
                 throw new IllegalArgumentException("Unknown select key: " + key);
@@ -131,12 +168,17 @@ public abstract class LambdaQueryBuilder<Entity, Self extends AbstractLambdaCond
         return sb.append(Constants.SPACE);
     }
 
+    @Override
+    protected boolean skipOrderBy() {
+        return selectResult != null && (Constants.SELECT_COUNT.equals(selectResult.getKey()) || Constants.SELECT_COUNT_DISTINCT.equals(selectResult.getKey()));
+    }
+
 
     @Override
     public final String selectJpql() {
         StringBuilder sb = new StringBuilder();
         sb.append(Constants.SELECT).append(Constants.SPACE);
-        StringBuffer selectResultSql = getSelectResultSql();
+        StringBuilder selectResultSql = getSelectResultSql();
         sb.append(selectResultSql);
         sb.append(Constants.FROM).append(Constants.SPACE).append(getEntityName()).append(Constants.SPACE).append(getEntityAlias()).append(Constants.SPACE);
         return sb.toString();

@@ -37,6 +37,13 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
 
     @Override
     protected Class<Entity> parseClassFromColumns() {
+        if (columnSet.isEmpty()) {
+            for (KV<String, Object> condition : conditions) {
+                if (condition.getValue() instanceof AbstactCondition) {
+                    return ((AbstactCondition<Entity, ?, ?>) condition.getValue()).getClazz();
+                }
+            }
+        }
         Assert.notEmpty(columnSet, "no condition no operation");
         WFunction<Entity, ?> entityWFunction = columnSet.stream().findFirst().get();
         return LambdaUtils.getClassFromFunction(entityWFunction);
@@ -56,13 +63,27 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
     @Override
     protected String whereJpql() {
         StringBuilder whereJpqlBuilder = new StringBuilder();
-        if (parent) {
-            // 保证where关键字只有一个 且 有效
-            whereJpqlBuilder.append(Constants.SPACE).append(Constants.WHERE).append(" (1=1) ");
-        }
-        // 处理实体参数
+
+        // 处理实体参数和数组条件
         String whereCondition = this.whereCondition();
-        whereJpqlBuilder.append(whereCondition);
+
+        if (parent) {
+            // 只有当有条件时才添加 WHERE 关键字
+            if (StringUtils.isNotBlank(whereCondition)) {
+                whereJpqlBuilder.append(Constants.SPACE).append(Constants.WHERE).append(Constants.SPACE);
+                // 移除第一个连接符 " AND " 或 " OR "
+                if (whereCondition.startsWith(" AND ")) {
+                    whereJpqlBuilder.append(whereCondition.substring(5));
+                } else if (whereCondition.startsWith(" OR ")) {
+                    whereJpqlBuilder.append(whereCondition.substring(4));
+                } else {
+                    whereJpqlBuilder.append(whereCondition);
+                }
+            }
+        } else {
+            // 非父类（子块）直接返回带连接符的条件
+            whereJpqlBuilder.append(whereCondition);
+        }
 
         // 处理唯一条件 groupBy orderBy last having 之类
         if (!singleConditions.isEmpty()) {
@@ -70,7 +91,6 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
         }
 
         return whereJpqlBuilder.toString();
-
     }
 
     /**
@@ -289,7 +309,11 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
         String jpqlString = jpql.getJpql();
         Map<String, Object> parameters = jpql.getParameters();
         jpqlString = parseChildJpql(jpqlString, parameters);
-        jpqlString = StringUtils.removeStart(jpqlString, " AND ");
+        if (jpqlString.startsWith(" AND ")) {
+            jpqlString = jpqlString.substring(5);
+        } else if (jpqlString.startsWith(" OR ")) {
+            jpqlString = jpqlString.substring(4);
+        }
         switch (operation) {
             case Constants.AND:
                 sb.append(" AND (");
@@ -323,7 +347,7 @@ public abstract class AbstractLambdaCondition<Entity, Self extends AbstractLambd
             sb.append(" HAVING ").append(condition);
         }
 
-        if (singleConditions.get(Constants.ORDER_BY) != null) {
+        if (singleConditions.get(Constants.ORDER_BY) != null && !skipOrderBy()) {
             List<KV<String, List<WFunction<Entity, ?>>>> orderByList = (List<KV<String, List<WFunction<Entity, ?>>>>) singleConditions.get(Constants.ORDER_BY);
             sb.append(" ORDER BY ");
             for (int i = 0; i < orderByList.size(); i++) {
